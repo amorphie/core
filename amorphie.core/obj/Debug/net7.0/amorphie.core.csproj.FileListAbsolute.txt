@@ -1,0 +1,12 @@
+C:\BurganProjeler\core\amorphie.core\bin\Debug\net7.0\amorphie.core.deps.json
+C:\BurganProjeler\core\amorphie.core\bin\Debug\net7.0\amorphie.core.dll
+C:\BurganProjeler\core\amorphie.core\bin\Debug\net7.0\amorphie.core.pdb
+C:\BurganProjeler\core\amorphie.core\obj\Debug\net7.0\amorphie.core.csproj.AssemblyReference.cache
+C:\BurganProjeler\core\amorphie.core\obj\Debug\net7.0\amorphie.core.GeneratedMSBuildEditorConfig.editorconfig
+C:\BurganProjeler\core\amorphie.core\obj\Debug\net7.0\amorphie.core.AssemblyInfoInputs.cache
+C:\BurganProjeler\core\amorphie.core\obj\Debug\net7.0\amorphie.core.AssemblyInfo.cs
+C:\BurganProjeler\core\amorphie.core\obj\Debug\net7.0\amorphie.core.csproj.CoreCompileInputs.cache
+C:\BurganProjeler\core\amorphie.core\obj\Debug\net7.0\amorphie.core.dll
+C:\BurganProjeler\core\amorphie.core\obj\Debug\net7.0\refint\amorphie.core.dll
+C:\BurganProjeler\core\amorphie.core\obj\Debug\net7.0\amorphie.core.pdb
+C:\BurganProjeler\core\amorphie.core\obj\Debug\net7.0\ref\amorphie.core.dll

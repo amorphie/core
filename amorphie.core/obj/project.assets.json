@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\BurganProjeler\\core\\amorphie.core\\amorphie.core\\amorphie.core.csproj",
+      "projectUniqueName": "C:\\BurganProjeler\\core\\amorphie.core\\amorphie.core.csproj",
       "projectName": "amorphie.core",
-      "projectPath": "C:\\BurganProjeler\\core\\amorphie.core\\amorphie.core\\amorphie.core.csproj",
+      "projectPath": "C:\\BurganProjeler\\core\\amorphie.core\\amorphie.core.csproj",
       "packagesPath": "C:\\Users\\U05812\\.nuget\\packages\\",
-      "outputPath": "C:\\BurganProjeler\\core\\amorphie.core\\amorphie.core\\obj\\",
+      "outputPath": "C:\\BurganProjeler\\core\\amorphie.core\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
