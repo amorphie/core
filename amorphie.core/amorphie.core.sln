@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32922.545
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "amorphie.core", "amorphie.core\amorphie.core.csproj", "{1C363E9D-E269-41AF-A689-AE9A8495141A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1C363E9D-E269-41AF-A689-AE9A8495141A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C363E9D-E269-41AF-A689-AE9A8495141A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C363E9D-E269-41AF-A689-AE9A8495141A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C363E9D-E269-41AF-A689-AE9A8495141A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {582F1B21-E997-4072-8D3A-17571F0EB8E6}
+	EndGlobalSection
+EndGlobal
