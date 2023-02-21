@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace amorphie.core.IBase
 {
-    internal interface IEntityBase
+    public interface IHasKey
     {
+        Guid Id { get; set; }
     }
 }
