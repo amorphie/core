@@ -19,12 +19,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      
-      - name: Build and push Api
-        uses: docker/build-push-action@v2
-        - name: Replace NUGET_API_KEY
+      - name: Replace NUGET_API_KEY
         run: |
-          sed -i -e "s/NUGETORG_TOKEN/${{ secrets.NUGETORG_TOKEN }}/g" amorphie.core.security/Dockerfile
+          sed -i -e "s/NUGETORG_TOKEN/${{ secrets.NUGETORG_TOKEN }}/g" amorphie.core/Dockerfile 
+      - name: Build and push Api
+        uses: docker/build-push-action@v2 
       - name: Build and push Api
         with:
           context: .
