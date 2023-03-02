@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <Folder Include="Common\" />
-    <None Include="docs\README.md" Pack="true" PackagePath="\"/>
+    <None Include="amorphie.core\README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
 </Project>
