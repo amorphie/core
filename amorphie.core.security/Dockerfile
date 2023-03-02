@@ -2,7 +2,7 @@ FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 
 WORKDIR /src
 
-COPY ["amorphie.core/amorphie.core.security.csproj", "."]
+COPY ["amorphie.core.security/amorphie.core.security.csproj", "."]
 RUN dotnet restore "amorphie.core.security.csproj"
 COPY . .
 WORKDIR "/src/amorphie.core.security"
