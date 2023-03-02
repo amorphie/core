@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "xY0s16tDWqCY/kUg9G8W3/ubrYqnzwvbUKoVuGKreseB9AvHAAUNx8rs4g4pdp8k6n8+8LyTfcw54S/5Zur+aA==",
+  "dgSpecHash": "/lYpnwQ3/gP77ZubF73XRhHejG7HLldD+LwfQOr2Je5pglHuFpVD06sWceAOgckXx5gF0lMESxhn0mYiuu3xTw==",
   "success": true,
   "projectFilePath": "C:\\BurganProjeler\\core\\amorphie.core.security\\amorphie.core.security.csproj",
   "expectedPackageFiles": [
@@ -16,12 +16,10 @@
     "C:\\Users\\U05812\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\7.0.0\\microsoft.extensions.configuration.abstractions.7.0.0.nupkg.sha512",
     "C:\\Users\\U05812\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\3.0.3\\microsoft.extensions.logging.abstractions.3.0.3.nupkg.sha512",
     "C:\\Users\\U05812\\.nuget\\packages\\microsoft.extensions.primitives\\7.0.0\\microsoft.extensions.primitives.7.0.0.nupkg.sha512",
-    "C:\\Users\\U05812\\.nuget\\packages\\newtonsoft.json\\13.0.2\\newtonsoft.json.13.0.2.nupkg.sha512",
     "C:\\Users\\U05812\\.nuget\\packages\\system.io.pipelines\\4.7.2\\system.io.pipelines.4.7.2.nupkg.sha512",
     "C:\\Users\\U05812\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
     "C:\\Users\\U05812\\.nuget\\packages\\system.net.http.json\\5.0.0\\system.net.http.json.5.0.0.nupkg.sha512",
-    "C:\\Users\\U05812\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.2\\system.runtime.compilerservices.unsafe.4.5.2.nupkg.sha512",
-    "C:\\Users\\U05812\\.nuget\\packages\\vaultsharp\\1.12.2.1\\vaultsharp.1.12.2.1.nupkg.sha512"
+    "C:\\Users\\U05812\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.2\\system.runtime.compilerservices.unsafe.4.5.2.nupkg.sha512"
   ],
   "logs": []
 }

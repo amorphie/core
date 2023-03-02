@@ -55,10 +55,6 @@
             "Microsoft.Extensions.Configuration.Abstractions": {
               "target": "Package",
               "version": "[7.0.0, )"
-            },
-            "VaultSharp": {
-              "target": "Package",
-              "version": "[1.12.2.1, )"
             }
           },
           "imports": [
