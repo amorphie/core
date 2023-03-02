@@ -9,6 +9,7 @@
     <Authors>Burgan Tech</Authors>
     <Company>Burgan</Company>
     <PackageDescription>amorphie.core</PackageDescription>
+    <PackageReadmeFile>readme.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
