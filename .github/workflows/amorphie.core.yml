@@ -1,0 +1,32 @@
+name: CI-CD-Worker
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'amorphie.core/Dockerfile'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'amorphie.core/Dockerfile'
+  workflow_dispatch:
+
+env:
+  APP_NAME: amorphiecore
+
+jobs:
+  ci-cd-worker-app:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Replace NUGET_API_KEY
+        run: |
+          sed -i -e "s/NUGETORG_TOKEN/${{ secrets.NUGETORG_TOKEN }}/g" amorphie.core/Dockerfile
+      - name: Build and push Api
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: amorphie.core/Dockerfile
+          push: false
+          tags: deneme1:${{ github.sha }}
