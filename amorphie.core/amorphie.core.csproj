@@ -4,10 +4,19 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackageId>amorphie.core</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Burgan Tech</Authors>
+    <Company>Burgan</Company>
+    <PackageDescription>amorphie.core</PackageDescription>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Common\" />
+    <Folder Include="Common\" />   
+  </ItemGroup>
+   <ItemGroup>
+    <None Update="README.md" Pack="true" PackagePath="\" />
   </ItemGroup>
 
 </Project>
