@@ -1,6 +1,7 @@
 ﻿using amorphie.core.Base;
 using amorphie.core.Enums;
 using amorphie.core.IBase;
+using System.Xml.Linq;
 using System.Xml.Schema;
 
 namespace amorphie.core
@@ -11,53 +12,57 @@ namespace amorphie.core
         {
             return new Response
             {
-                Data = "Mehmet az daha patlayacaktık.",
-                Result = new Result(Status.Success, "Kayıt başarılı","ddfdfdf")
+                Data = "Example object data",
+                Result = new Result(Status.Success, "Message")
             };
         }
 
-        public IResponse<Personel2> Result2()
+        public IResponse Resultx()
         {
-            return new Response<Personel2>
+            return new Response
             {
-                Data = new Personel2() { Id=1,Name="elma"},
-                Result = new Result(Status.Success, "Getirme başarılı")
+                Data = "Example object data",
+                Result = new Result(Status.Success, "Message", "Message detail")
             };
         }
 
-        public IResponse<List<Personel2>> Result3()
+        public IResponse<Staff> Result2()
         {
-            var list = new List<Personel2>() { new Personel2() { Id = 1, Name = "elma" } };
+            return new Response<Staff>
+            {
+                Data = new Staff() { Id=1,Name="Alice"},
+                Result = new Result(Status.Success, "Listing successful")
+            };
+        }
 
-            return new Response<List<Personel2>>
+        public IResponse<List<Staff>> Result3()
+        {
+            var list = new List<Staff>() { new Staff() { Id = 1, Name = "Tom" }, new Staff() { Id = 1, Name = "Alice" } };
+
+            return new Response<List<Staff>>
             {
                 Data = list,
                 Result = new Result(Status.Success, "Getirme başarılı")
             };
-
-            //return new Response
-            //{
-            //    Result = new Result(Enums.Status.Success, "Getirme başarılı")
-            //};
         }
 
         public IResponse<NoData2> Result4()
         {
             return new Response<NoData2>
             {
-                Result = new Result(Enums.Status.Success, "Kayıt başarılı")
+                Result = new Result(Enums.Status.Success, "Delete successful")
             };
         }
         public IResponse Result5()
         {
             return new NoDataResponse
             {
-                Result = new Result(Enums.Status.Success, "Kayıt başarılı")
+                Result = new Result(Enums.Status.Success, "Delete successful")
             };
         }
     }
 
-    public class Personel2
+    public class Staff
     {
         public int Id { get; set; }
         public string Name { get; set; }

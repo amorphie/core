@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace amorphie.core.Base
 {
-    public record MultilanguageText
-        (
-            string language,
-            string label
-        );
+    public class MultilanguageText
+    {
+        public string Language { get; set; } = string.Empty;
+        public string Label { get; set; } = string.Empty;
+    }
 }
