@@ -5,6 +5,9 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Reflection;
+using static Google.Rpc.Context.AttributeContext.Types;
 
 namespace amorphie.core.Module.minimal_api
 {
@@ -36,6 +39,11 @@ namespace amorphie.core.Module.minimal_api
             .Produces<TDTOModel[]>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status204NoContent);
 
+            routeGroupBuilder.MapGet("/fulltext", FullText)
+            .Produces<TDTOModel[]>(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status204NoContent);
+
+
             routeGroupBuilder.MapPost("/", Upsert)
             .Produces<TDTOModel>(StatusCodes.Status201Created)
             .Produces(StatusCodes.Status204NoContent);
@@ -61,6 +69,16 @@ namespace amorphie.core.Module.minimal_api
             [FromQuery][Range(5, 100)] int pageSize)
         {
             IList<TDBModel> resultList = await repository.GetAll(page, pageSize).ToListAsync();
+
+            return (resultList != null && resultList.Count() > 0)
+                 ? Results.Ok(resultList)
+                 : Results.NoContent();
+        }
+
+        protected virtual async ValueTask<IResult> FullText(
+    [FromServices] TRepository repository, SearchCriteria searchCriteria)
+        {
+            IList<TDBModel> resultList = await repository.GetAll(searchCriteria.Page, searchCriteria.PageSize).ToListAsync();
 
             return (resultList != null && resultList.Count() > 0)
                  ? Results.Ok(resultList)
@@ -130,6 +148,36 @@ namespace amorphie.core.Module.minimal_api
             }
 
             return Results.NotFound();
+        }
+    }
+
+    public class SearchCriteria
+    {
+        public int Page { get; set; }
+        public int PageSize { get; set; }
+
+        public string? Keyword { get; set; }
+
+        public Dictionary<string, string>? Data { get; set; }
+
+        public static ValueTask<SearchCriteria?> BindAsync(HttpContext context, ParameterInfo parameter)
+        {
+            string keyword = context.Request.Query["keyword"];
+            int.TryParse(context.Request.Query["page"], out var page);
+            int.TryParse(context.Request.Query["pageSize"], out var pageSize);
+
+          var param =   context.Request.Query.Keys.Where(x => !x.Equals("keyword") && !x.Equals("page") && !x.Equals("pageSize"))
+                .ToDictionary(k => k, v => (string)context.Request.Query[v]);
+
+
+            var result = new SearchCriteria
+            {
+                Keyword = keyword,
+                Page = page,
+                PageSize = pageSize,
+                Data = param
+            };
+            return ValueTask.FromResult<SearchCriteria?>(result);
         }
     }
 }
