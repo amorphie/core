@@ -12,7 +12,7 @@ namespace amorphie.core.Repository
         internal TContext Context;
         internal DbSet<TModel> dbSet;
 
-        public DbContext DbContext => Context;
+        public TContext DbContext => Context;
         
         public BBTRepository(TContext context)
         {
