@@ -8,6 +8,7 @@ namespace amorphie.core.Repository
         where TModel : EntityBase
         where TContext : DbContext
     {
+        DbContext DbContext { get; }
         ValueTask<TModel?> GetById(Guid id);
         Task<TModel?> FirstOrDefault(Expression<Func<TModel, bool>> predicate);
         Task<int> Insert(TModel entity);
