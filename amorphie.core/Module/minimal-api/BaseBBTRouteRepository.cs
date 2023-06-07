@@ -39,10 +39,11 @@ namespace amorphie.core.Module.minimal_api
             .Produces<TDTOModel[]>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status204NoContent);
 
+            /*
             routeGroupBuilder.MapGet("/fulltext", FullText)
             .Produces<TDTOModel[]>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status204NoContent);
-
+            */
 
             routeGroupBuilder.MapPost("/", Upsert)
             .Produces<TDTOModel>(StatusCodes.Status201Created)
@@ -74,9 +75,9 @@ namespace amorphie.core.Module.minimal_api
                  ? Results.Ok(resultList)
                  : Results.NoContent();
         }
-
+        /*
         protected virtual async ValueTask<IResult> FullText(
-    [FromServices] TRepository repository, DtoSearchBase searchCriteria)
+    [FromServices] TRepository repository, [AsParameters]DtoSearchBase searchCriteria)
         {
             IList<TDBModel> resultList = await repository.GetAll(searchCriteria.Page, searchCriteria.PageSize).ToListAsync();
 
@@ -84,7 +85,7 @@ namespace amorphie.core.Module.minimal_api
                  ? Results.Ok(resultList)
                  : Results.NoContent();
         }
-
+        */
         protected virtual async ValueTask<IResult> Upsert(
             [FromServices] IMapper mapper,
             [FromServices] TValidator validator,
