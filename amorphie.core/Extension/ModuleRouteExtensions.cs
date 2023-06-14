@@ -1,4 +1,5 @@
 ﻿using amorphie.core.Module.minimal_api;
+using AutoMapper;
 using System.Reflection;
 
 namespace amorphie.core.Extension
