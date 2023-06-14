@@ -41,7 +41,7 @@ namespace amorphie.core.Module.minimal_api
         )
         {
             DbSet<TDBModel> dbSet = context.Set<TDBModel>();
-            return await dbSet.FindAsync(id) is TDBModel model
+            return await dbSet.AsNoTracking().FirstOrDefaultAsync<TDBModel>(x=>x.Id == id) is TDBModel model
                 ? TypedResults.Ok(mapper.Map<TDTOModel>(model))
                 : TypedResults.NotFound();
         }
@@ -63,6 +63,7 @@ namespace amorphie.core.Module.minimal_api
         {
             IList<TDBModel> resultList = await context
                 .Set<TDBModel>()
+                .AsNoTracking()
                 .Skip(page)
                 .Take(pageSize)
                 .ToListAsync();
