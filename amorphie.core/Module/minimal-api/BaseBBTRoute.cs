@@ -8,10 +8,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace amorphie.core.Module.minimal_api
 {
-    public abstract class BaseBBTRoute<TDTOModel, TDBModel, TValidator, TDbContext> : BaseRoute
+    public abstract class BaseBBTRoute<TDTOModel, TDBModel, TDbContext> : BaseRoute
         where TDTOModel : class, new()
         where TDBModel : EntityBase
-        where TValidator : AbstractValidator<TDBModel>
         where TDbContext : DbContext
     {
         protected BaseBBTRoute(WebApplication app)
@@ -76,14 +75,14 @@ namespace amorphie.core.Module.minimal_api
         protected virtual void Upsert(RouteGroupBuilder routeGroupBuilder)
         {
             routeGroupBuilder.MapPost("/", UpsertMethod)
-                 .Produces<TDTOModel>(StatusCodes.Status200OK)
+                .Produces<TDTOModel>(StatusCodes.Status200OK)
                 .Produces<TDTOModel>(StatusCodes.Status201Created)
                 .Produces(StatusCodes.Status204NoContent);
         }
 
         protected virtual async ValueTask<IResult> UpsertMethod(
             [FromServices] IMapper mapper,
-            [FromServices] TValidator validator,
+            [FromServices] IValidator<TDBModel> validator,
             [FromServices] TDbContext context,
             [FromServices] IBBTIdentity bbtIdentity,
             [FromBody] TDTOModel data
