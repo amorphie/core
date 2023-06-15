@@ -41,7 +41,9 @@ namespace amorphie.core.Module.minimal_api
         )
         {
             DbSet<TDBModel> dbSet = context.Set<TDBModel>();
-            return await dbSet.AsNoTracking().FirstOrDefaultAsync<TDBModel>(x=>x.Id == id) is TDBModel model
+            return
+                await dbSet.AsNoTracking().FirstOrDefaultAsync<TDBModel>(x => x.Id == id)
+                    is TDBModel model
                 ? TypedResults.Ok(mapper.Map<TDTOModel>(model))
                 : TypedResults.NotFound();
         }
@@ -57,8 +59,8 @@ namespace amorphie.core.Module.minimal_api
         protected virtual async ValueTask<IResult> GetAllMethod(
             [FromServices] TDbContext context,
             [FromServices] IMapper mapper,
-            [FromQuery][Range(0, 100)] int page,
-            [FromQuery][Range(5, 100)] int pageSize
+            [FromQuery] [Range(0, 100)] int page,
+            [FromQuery] [Range(5, 100)] int pageSize
         )
         {
             IList<TDBModel> resultList = await context
@@ -68,14 +70,15 @@ namespace amorphie.core.Module.minimal_api
                 .Take(pageSize)
                 .ToListAsync();
 
-            return (resultList != null && resultList.Count() > 0)
+            return (resultList != null && resultList.Count > 0)
                 ? Results.Ok(mapper.Map<IList<TDTOModel>>(resultList))
                 : Results.NoContent();
         }
 
         protected virtual void Upsert(RouteGroupBuilder routeGroupBuilder)
         {
-            routeGroupBuilder.MapPost("/", UpsertMethod)
+            routeGroupBuilder
+                .MapPost("/", UpsertMethod)
                 .Produces<TDTOModel>(StatusCodes.Status200OK)
                 .Produces<TDTOModel>(StatusCodes.Status201Created)
                 .Produces(StatusCodes.Status204NoContent);
@@ -91,14 +94,17 @@ namespace amorphie.core.Module.minimal_api
         {
             var dbModelData = mapper.Map<TDBModel>(data);
 
-            FluentValidation.Results.ValidationResult validationResult =
-                await validator.ValidateAsync(dbModelData);
-
-            if (!validationResult.IsValid)
+            if (validator != null)
             {
-                return Results.ValidationProblem(validationResult.ToDictionary());
-            }
+                FluentValidation.Results.ValidationResult validationResult =
+                    await validator.ValidateAsync(dbModelData);
 
+                if (!validationResult.IsValid)
+                {
+                    return Results.ValidationProblem(validationResult.ToDictionary());
+                }
+            }
+            
             DbSet<TDBModel> dbSet = context.Set<TDBModel>();
 
             bool IsChange = false;
@@ -143,7 +149,9 @@ namespace amorphie.core.Module.minimal_api
                     return Results.Ok(mapper.Map<TDTOModel>(dataFromDB));
                 }
                 else
-                { return Results.NoContent(); }
+                {
+                    return Results.NoContent();
+                }
             }
             else
             {
