@@ -1,4 +1,5 @@
 ﻿using amorphie.core.Base;
+using amorphie.core.Identity;
 using AutoMapper;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
@@ -7,81 +8,103 @@ using System.ComponentModel.DataAnnotations;
 
 namespace amorphie.core.Module.minimal_api
 {
-    public abstract class BaseBBTRoute<
-        TDTOModel,
-        TDBModel,
-        TValidator,
-        TDbContext> : BaseRoute
+    public abstract class BaseBBTRoute<TDTOModel, TDBModel, TDbContext> : BaseRoute
         where TDTOModel : class, new()
         where TDBModel : EntityBase
-        where TValidator : AbstractValidator<TDBModel>
         where TDbContext : DbContext
     {
-        protected BaseBBTRoute(WebApplication app) : base(app)
-        {
-        }
+        protected BaseBBTRoute(WebApplication app)
+            : base(app) { }
 
         public abstract string[]? PropertyCheckList { get; }
 
         public override void AddRoutes(RouteGroupBuilder routeGroupBuilder)
         {
-            routeGroupBuilder.MapGet("/{id}", Get)
-             .Produces<TDTOModel>(StatusCodes.Status200OK)
-             .Produces(StatusCodes.Status404NotFound);
-
-            routeGroupBuilder.MapGet("/", GetAll)
-            .Produces<TDTOModel[]>(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status204NoContent);
-
-            routeGroupBuilder.MapPost("/", Upsert);
-
-            routeGroupBuilder.MapDelete("/{id}", Delete)
-            .Produces<TDTOModel>(StatusCodes.Status200OK)
-            .Produces(StatusCodes.Status404NotFound);
+            Get(routeGroupBuilder);
+            GetAll(routeGroupBuilder);
+            Upsert(routeGroupBuilder);
+            Delete(routeGroupBuilder);
         }
 
-        protected virtual async ValueTask<IResult> Get(
+        protected virtual void Get(RouteGroupBuilder routeGroupBuilder)
+        {
+            routeGroupBuilder
+                .MapGet("/{id}", GetMethod)
+                .Produces<TDTOModel>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status404NotFound);
+        }
+
+        protected virtual async ValueTask<IResult> GetMethod(
             [FromServices] TDbContext context,
-            [FromRoute(Name = "id")] int id)
+            [FromServices] IMapper mapper,
+            [FromRoute(Name = "id")] Guid id
+        )
         {
             DbSet<TDBModel> dbSet = context.Set<TDBModel>();
-            return await dbSet.FindAsync(id)
-                is TDBModel model
-                    ? TypedResults.Ok(model)
-                    : TypedResults.NotFound();
+            return
+                await dbSet.AsNoTracking().FirstOrDefaultAsync<TDBModel>(x => x.Id == id)
+                    is TDBModel model
+                ? TypedResults.Ok(mapper.Map<TDTOModel>(model))
+                : TypedResults.NotFound();
         }
 
-        protected virtual async ValueTask<IResult> GetAll(
-            [FromServices] TDbContext context,
-            [FromQuery][Range(0, 100)] int page,
-            [FromQuery][Range(5, 100)] int pageSize)
+        protected virtual void GetAll(RouteGroupBuilder routeGroupBuilder)
         {
-            IList<TDBModel> resultList = await context.Set<TDBModel>()
-             .Skip(page)
-             .Take(pageSize)
-             .ToListAsync();
-
-            return (resultList != null && resultList.Count() > 0)
-                 ? Results.Ok(resultList)
-                 : Results.NoContent();
+            routeGroupBuilder
+                .MapGet("/", GetAllMethod)
+                .Produces<TDTOModel[]>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status204NoContent);
         }
 
-        protected virtual async ValueTask<IResult> Upsert(
-            [FromServices] IMapper mapper,
-            [FromServices] TValidator validator,
+        protected virtual async ValueTask<IResult> GetAllMethod(
             [FromServices] TDbContext context,
-            [FromBody] TDTOModel data)
+            [FromServices] IMapper mapper,
+            [FromQuery] [Range(0, 100)] int page,
+            [FromQuery] [Range(5, 100)] int pageSize
+        )
+        {
+            IList<TDBModel> resultList = await context
+                .Set<TDBModel>()
+                .AsNoTracking()
+                .Skip(page)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (resultList != null && resultList.Count > 0)
+                ? Results.Ok(mapper.Map<IList<TDTOModel>>(resultList))
+                : Results.NoContent();
+        }
+
+        protected virtual void Upsert(RouteGroupBuilder routeGroupBuilder)
+        {
+            routeGroupBuilder
+                .MapPost("/", UpsertMethod)
+                .Produces<TDTOModel>(StatusCodes.Status200OK)
+                .Produces<TDTOModel>(StatusCodes.Status201Created)
+                .Produces(StatusCodes.Status204NoContent);
+        }
+
+        protected virtual async ValueTask<IResult> UpsertMethod(
+            [FromServices] IMapper mapper,
+            [FromServices] IValidator<TDBModel> validator,
+            [FromServices] TDbContext context,
+            [FromServices] IBBTIdentity bbtIdentity,
+            [FromBody] TDTOModel data
+        )
         {
             var dbModelData = mapper.Map<TDBModel>(data);
 
-
-            FluentValidation.Results.ValidationResult validationResult = await validator.ValidateAsync(dbModelData);
-
-            if (!validationResult.IsValid)
+            if (validator != null)
             {
-                return Results.ValidationProblem(validationResult.ToDictionary());
-            }
+                FluentValidation.Results.ValidationResult validationResult =
+                    await validator.ValidateAsync(dbModelData);
 
+                if (!validationResult.IsValid)
+                {
+                    return Results.ValidationProblem(validationResult.ToDictionary());
+                }
+            }
+            
             DbSet<TDBModel> dbSet = context.Set<TDBModel>();
 
             bool IsChange = false;
@@ -96,50 +119,81 @@ namespace amorphie.core.Module.minimal_api
 
                     foreach (string property in PropertyCheckList)
                     {
-                        dbValue = typeof(TDBModel).GetProperties().First(p => p.Name.Equals(property)).GetValue(dataFromDB);
-                        dtoValue = typeof(TDTOModel).GetProperties().First(p => p.Name.Equals(property)).GetValue(data);
+                        dbValue = typeof(TDBModel)
+                            .GetProperties()
+                            .First(p => p.Name.Equals(property))
+                            .GetValue(dataFromDB);
+                        dtoValue = typeof(TDTOModel)
+                            .GetProperties()
+                            .First(p => p.Name.Equals(property))
+                            .GetValue(data);
 
                         if (dbValue != null && !dbValue.Equals(dtoValue))
                         {
-                            typeof(TDBModel).GetProperties().First(p => p.Name.Equals(property)).SetValue(dataFromDB, dtoValue);
+                            typeof(TDBModel)
+                                .GetProperties()
+                                .First(p => p.Name.Equals(property))
+                                .SetValue(dataFromDB, dtoValue);
                             IsChange = true;
                         }
                     }
                 }
-            }
-            else
-            {
-                await dbSet.AddAsync(dbModelData);
-                IsChange = true;
-            }
 
-            if (IsChange)
-            {
-                await context.SaveChangesAsync();
-                return Results.Ok();
+                if (IsChange)
+                {
+                    dataFromDB.ModifiedAt = DateTime.UtcNow;
+                    dataFromDB.ModifiedBy = bbtIdentity.UserId.Value;
+                    dataFromDB.ModifiedByBehalfOf = bbtIdentity.BehalfOfId.Value;
+
+                    await context.SaveChangesAsync();
+                    return Results.Ok(mapper.Map<TDTOModel>(dataFromDB));
+                }
+                else
+                {
+                    return Results.NoContent();
+                }
             }
             else
             {
-                return Results.Ok("No change!");
+                dbModelData.CreatedAt = DateTime.UtcNow;
+                dbModelData.CreatedBy = bbtIdentity.UserId.Value;
+                dbModelData.CreatedByBehalfOf = bbtIdentity.BehalfOfId.Value;
+
+                dbModelData.ModifiedAt = dbModelData.CreatedAt;
+                dbModelData.ModifiedBy = dbModelData.CreatedBy;
+                dbModelData.ModifiedByBehalfOf = dbModelData.CreatedByBehalfOf;
+
+                await dbSet.AddAsync(dbModelData);
+                await context.SaveChangesAsync();
+
+                return Results.Created($"/{dbModelData.Id}", mapper.Map<TDTOModel>(dbModelData));
             }
         }
 
-        protected virtual async ValueTask<IResult> Delete(
+        protected virtual void Delete(RouteGroupBuilder routeGroupBuilder)
+        {
+            routeGroupBuilder
+                .MapDelete("/{id}", DeleteMethod)
+                .Produces<TDTOModel>(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status404NotFound);
+        }
+
+        protected virtual async ValueTask<IResult> DeleteMethod(
+            [FromServices] IMapper mapper,
             [FromServices] TDbContext context,
-            [FromRoute(Name = "id")] int id)
+            [FromRoute(Name = "id")] Guid id
+        )
         {
             DbSet<TDBModel> dbSet = context.Set<TDBModel>();
-
 
             if (await dbSet.FindAsync(id) is TDBModel model)
             {
                 dbSet.Remove(model);
                 await context.SaveChangesAsync();
-                return Results.Ok(model);
+                return Results.Ok(mapper.Map<TDTOModel>(model));
             }
 
             return Results.NotFound();
         }
     }
 }
-
