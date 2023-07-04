@@ -47,7 +47,7 @@
           "dependencies": {
             "Dapr.AspNetCore": {
               "target": "Package",
-              "version": "[1.9.0, )"
+              "version": "[1.11.0, )"
             },
             "Konscious.Security.Cryptography.Argon2": {
               "target": "Package",
