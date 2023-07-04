@@ -94,17 +94,14 @@ namespace amorphie.core.Module.minimal_api
         {
             var dbModelData = mapper.Map<TDBModel>(data);
 
-            if (validator != null)
-            {
-                FluentValidation.Results.ValidationResult validationResult =
-                    await validator.ValidateAsync(dbModelData);
+            FluentValidation.Results.ValidationResult validationResult =
+                await validator.ValidateAsync(dbModelData);
 
-                if (!validationResult.IsValid)
-                {
-                    return Results.ValidationProblem(validationResult.ToDictionary());
-                }
+            if (!validationResult.IsValid)
+            {
+                return Results.ValidationProblem(validationResult.ToDictionary());
             }
-            
+
             DbSet<TDBModel> dbSet = context.Set<TDBModel>();
 
             bool IsChange = false;
