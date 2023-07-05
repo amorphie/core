@@ -37,6 +37,7 @@ namespace amorphie.core.Module.minimal_api
         protected virtual async ValueTask<IResult> GetMethod(
             [FromServices] TDbContext context,
             [FromServices] IMapper mapper,
+            [FromServices] HttpContext httpContext,
             [FromRoute(Name = "id")] Guid id
         )
         {
@@ -59,6 +60,7 @@ namespace amorphie.core.Module.minimal_api
         protected virtual async ValueTask<IResult> GetAllMethod(
             [FromServices] TDbContext context,
             [FromServices] IMapper mapper,
+            [FromServices] HttpContext httpContext,
             [FromQuery] [Range(0, 100)] int page,
             [FromQuery] [Range(5, 100)] int pageSize
         )
