@@ -1,7 +1,7 @@
 
 # amorphie.core
 
-Simple tag management service for developers.
+Simple tag management service for developers..
 
 Features;
 
