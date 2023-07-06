@@ -12,7 +12,7 @@ Features;
 ### Response types
 
 ```c#
-// When you want to return object data and message.
+// When you want to return object data and message..
 public IResponse Result()
 {
     return new Response
