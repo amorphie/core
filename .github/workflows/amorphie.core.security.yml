@@ -1,18 +1,9 @@
 name: CI-CD-Worker
-
 on:
   push:
     branches: [ main ]
     paths:
-      - 'amorphie.core.security/Dockerfile'
-  pull_request:
-    types:
-      - opened
-    branches:
-      - '*'
-    paths:
-      - 'amorphie.core.security/Dockerfile'
-      
+      - 'amorphie.core.security/**'
 env:
   APP_NAME: amorphiecore.security
 
