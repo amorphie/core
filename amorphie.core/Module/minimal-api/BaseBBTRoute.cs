@@ -37,13 +37,14 @@ namespace amorphie.core.Module.minimal_api
         protected virtual async ValueTask<IResult> GetMethod(
             [FromServices] TDbContext context,
             [FromServices] IMapper mapper,
-            [FromServices] HttpContext httpContext,
-            [FromRoute(Name = "id")] Guid id
+            [FromRoute(Name = "id")] Guid id,
+            HttpContext httpContext,
+            CancellationToken token
         )
         {
             DbSet<TDBModel> dbSet = context.Set<TDBModel>();
             return
-                await dbSet.AsNoTracking().FirstOrDefaultAsync<TDBModel>(x => x.Id == id)
+                await dbSet.AsNoTracking().FirstOrDefaultAsync<TDBModel>(x => x.Id == id, token)
                     is TDBModel model
                 ? TypedResults.Ok(mapper.Map<TDTOModel>(model))
                 : TypedResults.NotFound();
@@ -60,9 +61,10 @@ namespace amorphie.core.Module.minimal_api
         protected virtual async ValueTask<IResult> GetAllMethod(
             [FromServices] TDbContext context,
             [FromServices] IMapper mapper,
-            [FromServices] HttpContext httpContext,
-            [FromQuery] [Range(0, 100)] int page,
-            [FromQuery] [Range(5, 100)] int pageSize
+            [FromQuery][Range(0, 100)] int page,
+            [FromQuery][Range(5, 100)] int pageSize,
+            HttpContext httpContext,
+            CancellationToken token
         )
         {
             IList<TDBModel> resultList = await context
@@ -70,7 +72,7 @@ namespace amorphie.core.Module.minimal_api
                 .AsNoTracking()
                 .Skip(page)
                 .Take(pageSize)
-                .ToListAsync();
+                .ToListAsync(token);
 
             return (resultList != null && resultList.Count > 0)
                 ? Results.Ok(mapper.Map<IList<TDTOModel>>(resultList))
@@ -91,7 +93,9 @@ namespace amorphie.core.Module.minimal_api
             [FromServices] IValidator<TDBModel> validator,
             [FromServices] TDbContext context,
             [FromServices] IBBTIdentity bbtIdentity,
-            [FromBody] TDTOModel data
+            [FromBody] TDTOModel data,
+            HttpContext httpContext,
+            CancellationToken token
         )
         {
             var dbModelData = mapper.Map<TDBModel>(data);
@@ -107,7 +111,7 @@ namespace amorphie.core.Module.minimal_api
             DbSet<TDBModel> dbSet = context.Set<TDBModel>();
 
             bool IsChange = false;
-            TDBModel? dataFromDB = await dbSet.FirstOrDefaultAsync(x => x.Id == dbModelData.Id);
+            TDBModel? dataFromDB = await dbSet.FirstOrDefaultAsync(x => x.Id == dbModelData.Id, token);
 
             if (dataFromDB != null)
             {
@@ -144,7 +148,7 @@ namespace amorphie.core.Module.minimal_api
                     dataFromDB.ModifiedBy = bbtIdentity.UserId.Value;
                     dataFromDB.ModifiedByBehalfOf = bbtIdentity.BehalfOfId.Value;
 
-                    await context.SaveChangesAsync();
+                    await context.SaveChangesAsync(token);
                     return Results.Ok(mapper.Map<TDTOModel>(dataFromDB));
                 }
                 else
@@ -163,7 +167,7 @@ namespace amorphie.core.Module.minimal_api
                 dbModelData.ModifiedByBehalfOf = dbModelData.CreatedByBehalfOf;
 
                 await dbSet.AddAsync(dbModelData);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(token);
 
                 return Results.Created($"/{dbModelData.Id}", mapper.Map<TDTOModel>(dbModelData));
             }
@@ -180,15 +184,17 @@ namespace amorphie.core.Module.minimal_api
         protected virtual async ValueTask<IResult> DeleteMethod(
             [FromServices] IMapper mapper,
             [FromServices] TDbContext context,
-            [FromRoute(Name = "id")] Guid id
+            [FromRoute(Name = "id")] Guid id,
+             HttpContext httpContext,
+            CancellationToken token
         )
         {
             DbSet<TDBModel> dbSet = context.Set<TDBModel>();
 
-            if (await dbSet.FindAsync(id) is TDBModel model)
+            if (await dbSet.FindAsync(id, token) is TDBModel model)
             {
                 dbSet.Remove(model);
-                await context.SaveChangesAsync();
+                await context.SaveChangesAsync(token);
                 return Results.Ok(mapper.Map<TDTOModel>(model));
             }
 
