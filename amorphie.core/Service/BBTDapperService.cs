@@ -28,5 +28,6 @@ namespace amorphie.core.Service
             var test = _daprClient.CreateInvokeMethodRequest(HttpMethod.Post, appId, methodName);
             return await _daprClient.InvokeMethodAsync<TResponse>(test);
         }
+        
     }
 }
