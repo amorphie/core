@@ -3,10 +3,10 @@
     "amorphie.core": {
       "commandName": "Project",
       "launchBrowser": true,
+      "applicationUrl": "https://localhost:62843;http://localhost:62844",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "https://localhost:62843;http://localhost:62844"
+      }
     }
   }
 }
