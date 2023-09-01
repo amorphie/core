@@ -16,7 +16,7 @@ namespace amorphie.core.Zeebe.dapr
             return await _daprClient.InvokeBindingAsync<object, TopologyResponse>(bindingName, Commands.Topology, new { });
         }
 
-        public async ValueTask<CreateInstanceResponse> CreateInstance(string bindingName,CreateInstanceRequest request)
+        public async ValueTask<CreateInstanceResponse> CreateInstance(string bindingName, CreateInstanceRequest request)
         {
             if (request.BpmnProcessId == null && request.ProcessDefinitionKey == null)
             {
@@ -29,7 +29,7 @@ namespace amorphie.core.Zeebe.dapr
             return result;
         }
 
-        public async ValueTask CancelInstance(string bindingName,CancelInstanceRequest request)
+        public async ValueTask CancelInstance(string bindingName, CancelInstanceRequest request)
         {
             await _daprClient.InvokeBindingAsync(bindingName, Commands.CancelInstance, request);
         }

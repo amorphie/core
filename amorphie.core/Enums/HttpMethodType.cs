@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace amorphie.core.Enums
 {
-    public enum HttpMethodType : byte 
-    { 
-        CONNECT, 
-        DELETE, 
-        GET, 
-        HEAD, 
-        OPTIONS, 
-        POST, 
-        PUT, 
-        TRACE 
+    public enum HttpMethodType : byte
+    {
+        CONNECT,
+        DELETE,
+        GET,
+        HEAD,
+        OPTIONS,
+        POST,
+        PUT,
+        TRACE
     }
 }

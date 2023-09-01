@@ -5,9 +5,9 @@ using System.Reflection;
 namespace amorphie.core.Extension
 {
     public static class ModuleRouteExtensions
-	{
-		public static void AddRoutes(this WebApplication webApplication, IEnumerable<Assembly> assemblies)
-		{
+    {
+        public static void AddRoutes(this WebApplication webApplication, IEnumerable<Assembly> assemblies)
+        {
             if (assemblies == null || !assemblies.Any())
             {
                 assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -30,7 +30,7 @@ namespace amorphie.core.Extension
                         if (!interfaceTypes.Any(t => t == @interface))
                             continue;
 
-                       Activator.CreateInstance(type, webApplication);
+                        Activator.CreateInstance(type, webApplication);
                     }
                 }
             }
