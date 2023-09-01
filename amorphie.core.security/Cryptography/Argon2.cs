@@ -7,7 +7,7 @@ namespace amorphie.core.security.Cryptography
 {
     public class Argon2
     {
-        public const int BufferSize= 128;
+        public const int BufferSize = 128;
         public const int MemorySize = 1024;
 
         public static byte[] CreateSalt()

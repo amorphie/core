@@ -25,8 +25,8 @@ namespace amorphie.core.HealthCheck
             {
                 var topicName = $"Dapr-{"healthCheckTopic"}-{PubSubName}";
                 var timeToLeave = 60;
-     
-                await _daprClient.PublishEventAsync(PubSubName,topicName,default);
+
+                await _daprClient.PublishEventAsync(PubSubName, topicName, default);
 
                 return HealthCheckResult.Healthy(
                     $"Dapr pubsub: {PubSubName} for topic '{topicName}' is healthy."
