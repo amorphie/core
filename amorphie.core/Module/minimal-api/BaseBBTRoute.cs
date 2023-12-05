@@ -68,7 +68,7 @@ namespace amorphie.core.Module.minimal_api
             HttpContext httpContext,
             CancellationToken token,
             [FromQuery] string? sortColumn,
-            [FromQuery] SortDirectionEnum sortDirection = SortDirectionEnum.OrderBy
+            [FromQuery] SortDirectionEnum sortDirection = SortDirectionEnum.Asc
         )
         {
             IQueryable<TDBModel> query = context
