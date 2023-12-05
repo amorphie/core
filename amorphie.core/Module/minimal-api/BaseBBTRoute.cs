@@ -70,14 +70,14 @@ namespace amorphie.core.Module.minimal_api
             [FromQuery] SortDirectionEnum sortDirection = SortDirectionEnum.OrderBy
         )
         {
-            IQueryable<TDBModel> query =  context
+            IQueryable<TDBModel> query = context
                 .Set<TDBModel>()
                 .AsNoTracking();
 
-if(!string.IsNullOrEmpty(sortColumn))
-{
-    query = await query.Sort(sortColumn, sortDirection);
-}
+            if (!string.IsNullOrEmpty(sortColumn))
+            {
+                query = await query.Sort(sortColumn, sortDirection);
+            }
             IList<TDBModel> resultList = await query
                 .Skip(page)
                 .Take(pageSize)
