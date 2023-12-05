@@ -6,10 +6,12 @@ namespace amorphie.core.Service
     public class BBTDapperService
     {
         protected readonly DaprClient _daprClient;
-        public BBTDapperService(DaprClient daprClient) {
+        public BBTDapperService(DaprClient daprClient)
+        {
             _daprClient = daprClient;
         }
-        public async ValueTask<TResponse> Get<TResponse,TRequest>(TRequest request, string appId, string methodName) {
+        public async ValueTask<TResponse> Get<TResponse, TRequest>(TRequest request, string appId, string methodName)
+        {
             var test = _daprClient.CreateInvokeMethodRequest<TRequest>(HttpMethod.Get, appId, methodName, request);
             return await _daprClient.InvokeMethodAsync<TResponse>(test);
         }
@@ -30,6 +32,6 @@ namespace amorphie.core.Service
         }
 
 
-        
+
     }
 }
