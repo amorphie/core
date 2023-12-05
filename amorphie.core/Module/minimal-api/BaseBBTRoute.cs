@@ -5,6 +5,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using static amorphie.core.Extension.DatabaseExtensions;
 
 namespace amorphie.core.Module.minimal_api
 {
@@ -64,12 +65,20 @@ namespace amorphie.core.Module.minimal_api
             [FromQuery][Range(0, 100)] int page,
             [FromQuery][Range(5, 100)] int pageSize,
             HttpContext httpContext,
-            CancellationToken token
+            CancellationToken token,
+            [FromQuery] string? sortColumn,
+            [FromQuery] SortDirectionEnum sortDirection = SortDirectionEnum.OrderBy
         )
         {
-            IList<TDBModel> resultList = await context
+            IQueryable<TDBModel> query =  context
                 .Set<TDBModel>()
-                .AsNoTracking()
+                .AsNoTracking();
+
+if(!string.IsNullOrEmpty(sortColumn))
+{
+    query = await query.Sort(sortColumn, sortDirection);
+}
+            IList<TDBModel> resultList = await query
                 .Skip(page)
                 .Take(pageSize)
                 .ToListAsync(token);
