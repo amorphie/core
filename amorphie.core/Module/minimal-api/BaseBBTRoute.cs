@@ -1,4 +1,5 @@
 ﻿using amorphie.core.Base;
+using amorphie.core.Extension;
 using amorphie.core.Identity;
 using AutoMapper;
 using FluentValidation;
