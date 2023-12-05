@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 
 namespace amorphie.core.Extension;
 
+public enum SortDirectionEnum
+{
+    OrderBy = 0,
+    OrderByDescending = 1
+}
+
 public static class DatabaseExtensions
 {
-    public enum SortDirectionEnum
-    {
-        OrderBy = 0,
-        OrderByDescending = 1
-    }
+
     public async static Task<IQueryable<TModel>> Sort<TModel>(this IQueryable<TModel> query, string SortColumn, SortDirectionEnum sortDirectionEnum)
     {
         if (!string.IsNullOrEmpty(SortColumn))
