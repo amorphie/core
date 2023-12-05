@@ -8,8 +8,8 @@ namespace amorphie.core.Extension;
 
 public enum SortDirectionEnum
 {
-    OrderBy = 0,
-    OrderByDescending = 1
+    Asc,
+    Desc
 }
 
 public static class DatabaseExtensions
@@ -19,6 +19,15 @@ public static class DatabaseExtensions
     {
         if (!string.IsNullOrEmpty(SortColumn))
         {
+            string sortDirection = string.Empty;
+if(sortDirectionEnum == SortDirectionEnum.Asc)
+{
+                sortDirection = "OrderBy";
+}
+else
+{
+                sortDirection = "OrderByDescending";
+            }
             var queryExpr = query.Expression;
             var parameter = Expression.Parameter(typeof(TModel), "p");
             var property = typeof(TModel).GetProperties().FirstOrDefault(p => string.Equals(p.Name, SortColumn, StringComparison.OrdinalIgnoreCase));
@@ -30,7 +39,7 @@ public static class DatabaseExtensions
             var expression = Expression.Lambda(propertyAccess, parameter);
 
             queryExpr = Expression.Call(typeof(Queryable),
-                                              sortDirectionEnum.ToString(),
+                                             sortDirection,
                                               new[] { GetElementType(query), expression.Body.Type },
                                               query.Expression,
                                               Expression.Quote(expression));
