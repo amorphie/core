@@ -20,12 +20,12 @@ public static class DatabaseExtensions
         if (!string.IsNullOrEmpty(SortColumn))
         {
             string sortDirection = string.Empty;
-if(sortDirectionEnum == SortDirectionEnum.Asc)
-{
+            if (sortDirectionEnum == SortDirectionEnum.Asc)
+            {
                 sortDirection = "OrderBy";
-}
-else
-{
+            }
+            else
+            {
                 sortDirection = "OrderByDescending";
             }
             var queryExpr = query.Expression;
