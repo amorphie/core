@@ -10,6 +10,6 @@ namespace amorphie.core.Base
         public string? Keyword { get; set; }
 
         public string? SortColumn { get; set; }
-        public SortDirectionEnum SortDirection { get; set; } = SortDirectionEnum.OrderBy;
+        public SortDirectionEnum SortDirection { get; set; } = SortDirectionEnum.Asc;
     }
 }
