@@ -80,7 +80,7 @@ namespace amorphie.core.Module.minimal_api
                 query = await query.Sort(sortColumn, sortDirection);
             }
             IList<TDBModel> resultList = await query
-                .Skip(page)
+                .Skip(page * pageSize)
                 .Take(pageSize)
                 .ToListAsync(token);
 
