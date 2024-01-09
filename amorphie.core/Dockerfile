@@ -9,5 +9,6 @@ WORKDIR "/src/amorphie.core"
      
 RUN dotnet build "amorphie.core.csproj" -c Release -o /app/build
 WORKDIR "/src/amorphie.core"
-RUN dotnet pack /p:Version=1.1.17 -c Release -o /app/build 
+
+RUN dotnet pack /p:Version=1.1.18 -c Release -o /app/build 
 RUN dotnet nuget push /app/build/*.nupkg --source https://api.nuget.org/v3/index.json --api-key "NUGETORG_TOKEN"
