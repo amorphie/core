@@ -68,7 +68,7 @@ namespace amorphie.core.Module.minimal_api
             HttpContext httpContext,
             CancellationToken token,
             [FromQuery] string? sortColumn,
-            [FromQuery] SortDirectionEnum sortDirection = SortDirectionEnum.Asc
+            [FromQuery] SortDirectionEnum? sortDirection
         )
         {
             IQueryable<TDBModel> query = context
@@ -80,7 +80,7 @@ namespace amorphie.core.Module.minimal_api
                 query = await query.Sort(sortColumn, sortDirection);
             }
             IList<TDBModel> resultList = await query
-                .Skip(page)
+                .Skip(page * pageSize)
                 .Take(pageSize)
                 .ToListAsync(token);
 

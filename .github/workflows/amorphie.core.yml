@@ -3,8 +3,9 @@ name: CI-CD-Worker
 on:
   push:
     branches: [ main ]
-    paths:
-      - 'amorphie.core/**'
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
 env:
   APP_NAME: amorphiecore
 

@@ -15,17 +15,17 @@ public enum SortDirectionEnum
 public static class DatabaseExtensions
 {
 
-    public async static Task<IQueryable<TModel>> Sort<TModel>(this IQueryable<TModel> query, string SortColumn, SortDirectionEnum sortDirectionEnum)
+    public async static Task<IQueryable<TModel>> Sort<TModel>(this IQueryable<TModel> query, string SortColumn, SortDirectionEnum? sortDirectionEnum)
     {
         if (!string.IsNullOrEmpty(SortColumn))
         {
             string sortDirection = string.Empty;
-if(sortDirectionEnum == SortDirectionEnum.Asc)
-{
+            if (sortDirectionEnum.GetValueOrDefault(SortDirectionEnum.Asc) == SortDirectionEnum.Asc)
+            {
                 sortDirection = "OrderBy";
-}
-else
-{
+            }
+            else
+            {
                 sortDirection = "OrderByDescending";
             }
             var queryExpr = query.Expression;
