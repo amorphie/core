@@ -16,6 +16,8 @@
 
   <ItemGroup>
     <Folder Include="Common\" />   
+    <Folder Include="Serilog\" />
+    <Folder Include="Serilog\Enricher\" />
   </ItemGroup>
 
   <ItemGroup>
