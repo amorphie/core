@@ -15,7 +15,7 @@ namespace amorphie.core.Extension
 
     public static class SerilogExtension
     {
-        public static async Task AddVaultSecrets(this WebApplicationBuilder builder, string? indexFormat)
+        public static async Task AddSeriLog(this WebApplicationBuilder builder, string? indexFormat)
         {
             builder.Services.AddHttpContextAccessor();
 
