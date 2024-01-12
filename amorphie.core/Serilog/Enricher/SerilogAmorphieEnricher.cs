@@ -62,7 +62,7 @@ public class SerilogAmorphieEnricher : ILogEventEnricher
         }
 
         AddPropertyIfAbsent("Environment", Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"));
-        AddPropertyIfAbsent("ApplicationName",  Environment.GetEnvironmentVariable("ApplicationName"));
+        AddPropertyIfAbsent("ApplicationName", Environment.GetEnvironmentVariable("ApplicationName"));
     }
     void RecursiveJsonLoop(JObject jsonObject, string currentPath)
     {
