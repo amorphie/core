@@ -15,12 +15,12 @@ namespace amorphie.core.Extension
 
     public static class SerilogExtension
     {
-        public static async Task AddSeriLog(this WebApplicationBuilder builder, string? indexFormat)
+        public static async Task AddSeriLog(this WebApplicationBuilder builder,string applicationName, string? indexFormat)
         {
+
             builder.Services.AddHttpContextAccessor();
 
-            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
-            var applicationName = Assembly.GetExecutingAssembly().GetName().Name;
+            Environment.SetEnvironmentVariable("ApplicationName",applicationName);
 
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(builder.Configuration)

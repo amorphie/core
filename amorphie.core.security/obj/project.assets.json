@@ -619,11 +619,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/mt/Documents/GitHub/core/amorphie.core.security/amorphie.core.security.csproj",
+      "projectUniqueName": "/Users/mt/Documents/core/core/amorphie.core.security/amorphie.core.security.csproj",
       "projectName": "amorphie.core.security",
-      "projectPath": "/Users/mt/Documents/GitHub/core/amorphie.core.security/amorphie.core.security.csproj",
+      "projectPath": "/Users/mt/Documents/core/core/amorphie.core.security/amorphie.core.security.csproj",
       "packagesPath": "/Users/mt/.nuget/packages/",
-      "outputPath": "/Users/mt/Documents/GitHub/core/amorphie.core.security/obj/",
+      "outputPath": "/Users/mt/Documents/core/core/amorphie.core.security/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/mt/.nuget/NuGet/NuGet.Config"
@@ -680,7 +680,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.311/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.100/RuntimeIdentifierGraph.json"
       }
     }
   }
