@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "amorphie.core", "amorphie.c
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "amorphie.core.security", "amorphie.core.security\amorphie.core.security.csproj", "{35276503-28CA-4DD5-BBF5-4823D03F39FA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "amorphie.core.test.ui", "amorphie.core.test.ui\amorphie.core.test.ui.csproj", "{8A6AF6ED-92F0-41D7-A596-AA761E5D585F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{35276503-28CA-4DD5-BBF5-4823D03F39FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35276503-28CA-4DD5-BBF5-4823D03F39FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35276503-28CA-4DD5-BBF5-4823D03F39FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A6AF6ED-92F0-41D7-A596-AA761E5D585F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A6AF6ED-92F0-41D7-A596-AA761E5D585F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A6AF6ED-92F0-41D7-A596-AA761E5D585F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A6AF6ED-92F0-41D7-A596-AA761E5D585F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

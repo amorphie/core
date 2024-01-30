@@ -1,0 +1,23 @@
+{
+  "Version": 1,
+  "Hash": "JLVlY3r5REsv1J9Rth/dTLzxG2JQrLPMCdVoV6Mp0rk=",
+  "Source": "amorphie.core.test.ui",
+  "BasePath": "_content/amorphie.core.test.ui",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [
+    {
+      "Identity": "/Users/mt/Documents/core/core/amorphie.core/amorphie.core.csproj",
+      "Version": 2,
+      "Source": "amorphie.core",
+      "GetPublishAssetsTargets": "ComputeReferencedStaticWebAssetsPublishManifest;GetCurrentProjectPublishStaticWebAssetItems",
+      "AdditionalPublishProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalPublishPropertiesToRemove": "TargetFramework",
+      "GetBuildAssetsTargets": "GetCurrentProjectBuildStaticWebAssetItems",
+      "AdditionalBuildProperties": "Configuration=Debug;Platform=AnyCPU",
+      "AdditionalBuildPropertiesToRemove": "TargetFramework"
+    }
+  ],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
