@@ -16,8 +16,8 @@ namespace amorphie.core.Extension
 
     public static class SerilogExtension
     {
-            public static void AddSeriLog(
-            this WebApplicationBuilder builder)
+        public static void AddSeriLog(
+        this WebApplicationBuilder builder)
         {
 
             builder.Services.AddHttpContextAccessor();
