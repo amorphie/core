@@ -15,7 +15,7 @@ namespace amorphie.core.Base
         {
             Result = new(Status.Error, "");
         }
-        public object Data { get; set; } = default;
+        public object Data { get; set; } = default!;
     }
     public sealed class Response<T> : IResponse<T>
     {
@@ -24,7 +24,7 @@ namespace amorphie.core.Base
             Result = new(Status.Error, "");
         }
         public Result Result { get; set; }
-        public T Data { get; set; } = default;
+        public T Data { get; set; } = default!;
     }
     public sealed class NoDataResponse : IResponse
     {
