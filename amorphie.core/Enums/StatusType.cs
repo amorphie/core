@@ -16,6 +16,7 @@ namespace amorphie.core.Enums
         Passive = 16,
         Completed = 32,
         LockedInFlow = 256,
+        Error = 512,
         All = New | Active | InProgress | Passive
     }
 }
