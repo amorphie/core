@@ -20,7 +20,7 @@ namespace amorphie.core.Base
         {
             return new Response
             {
-                Result = new Result(Status.Error, message)         
+                Result = new Result(Status.Error, message)
             };
         }
         public static Response Error(string message, object data)
@@ -35,7 +35,7 @@ namespace amorphie.core.Base
         {
             return new Response
             {
-                Result = new Result(Status.Success, message)         
+                Result = new Result(Status.Success, message)
             };
         }
         public static Response Success(string message, object data)
