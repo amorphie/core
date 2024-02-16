@@ -16,6 +16,36 @@ namespace amorphie.core.Base
             Result = new(Status.Error, "");
         }
         public object Data { get; set; } = default!;
+        public static Response Error(string message)
+        {
+            return new Response
+            {
+                Result = new Result(Status.Error, message)         
+            };
+        }
+        public static Response Error(string message, object data)
+        {
+            return new Response
+            {
+                Result = new Result(Status.Error, message),
+                Data = data
+            };
+        }
+        public static Response Success(string message)
+        {
+            return new Response
+            {
+                Result = new Result(Status.Success, message)         
+            };
+        }
+        public static Response Success(string message, object data)
+        {
+            return new Response
+            {
+                Result = new Result(Status.Success, message),
+                Data = data
+            };
+        }
     }
     public sealed class Response<T> : IResponse<T>
     {
