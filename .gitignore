@@ -348,3 +348,8 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/.vs/amorphie.core/DesignTimeBuild/.dtbcache.v2
+/.vs/amorphie.core/v17/.futdcache.v2
+/.vs/amorphie.core/v17/.suo
+/.vs/ProjectEvaluation/amorphie.core.metadata.v5.1
+/.vs/ProjectEvaluation/amorphie.core.projects.v5.1
