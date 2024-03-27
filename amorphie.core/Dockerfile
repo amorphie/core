@@ -5,7 +5,7 @@ WORKDIR /src
 COPY ["amorphie.core/amorphie.core.csproj", "."]
 RUN dotnet restore "amorphie.core.csproj"
 COPY . .
-WORKDIR "/src/amorphie.core"
+WORKDIR "/src/amorphie.core" 
      
 RUN dotnet build "amorphie.core.csproj" -c Release -o /app/build
 WORKDIR "/src/amorphie.core"
