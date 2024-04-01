@@ -1,6 +1,7 @@
 ﻿using amorphie.core.Extension;
 using System.Reflection;
-using amorphie.core.Middleware;
+using amorphie.core.Middleware.Logging;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.AddSeriLog();
+builder.AddSeriLogWithHttpLogging<AmorphieLogEnricher>();
 
 var app = builder.Build();
 
@@ -26,17 +27,16 @@ var summaries = new[]
 
 app.MapGet("/weatherforecast", (ILogger<object> logger) =>
 {
-    logger.LogTrace("Trace Log Message");
-    logger.LogDebug("Debug Log Message");
-    logger.LogInformation("Information Log Message");
-    logger.LogWarning("Warning Log Message");
-    logger.LogError("Error Log Message");
+    //logger.LogTrace("Trace Log Message");
+    //logger.LogDebug("Debug Log Message");
+    //logger.LogInformation("Information Log Message");
+    //logger.LogWarning("Warning Log Message");
+    //logger.LogError("Error Log Message");
     logger.LogCritical("Critical Log Message");
 
     var forecast =  Enumerable.Range(1, 5).Select(index =>
         new WeatherForecast
         (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
             Random.Shared.Next(-20, 55),
             summaries[Random.Shared.Next(summaries.Length)]
         ))
@@ -46,11 +46,18 @@ app.MapGet("/weatherforecast", (ILogger<object> logger) =>
 .WithName("GetWeatherForecast")
 .WithOpenApi();
 
+app.MapPost("/forecast1", ([FromBody] WeatherForecast weatherForecast) =>
+{
+    return "Test";
+})
+.WithName("PostForecast1")
+.WithOpenApi();
 
-app.UseMiddleware<LoggingHandlerMiddleware>();
+
+app.UseLoggingHandlerMiddlewares();
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+record WeatherForecast(int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
