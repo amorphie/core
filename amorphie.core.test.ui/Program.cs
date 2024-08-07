@@ -1,6 +1,7 @@
 ﻿using amorphie.core.Extension;
 using System.Reflection;
 using amorphie.core.Middleware;
+using amorphie.core.Middleware.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.AddSeriLog();
+builder.AddSeriLog<AmorphieLogEnricher>();
 
 var app = builder.Build();
 
@@ -47,7 +48,7 @@ app.MapGet("/weatherforecast", (ILogger<object> logger) =>
 .WithOpenApi();
 
 
-app.UseMiddleware<LoggingHandlerMiddleware>();
+app.UseLoggingHandlerMiddlewares();
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
