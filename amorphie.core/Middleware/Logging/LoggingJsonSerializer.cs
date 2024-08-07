@@ -4,7 +4,7 @@ using System.Text.Json;
 namespace amorphie.core.Middleware.Logging;
 internal static class LoggingJsonSerializer
 {
-    private static JsonSerializerOptions opt = new JsonSerializerOptions
+    private readonly static JsonSerializerOptions opt = new()
     {
         PropertyNameCaseInsensitive = true,
         //WriteIndented = true,

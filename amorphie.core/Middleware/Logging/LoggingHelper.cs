@@ -49,7 +49,7 @@ public static class LoggingHelper
 
             return LoggingJsonSerializer.Serialize(responseAsJson);
         }
-        catch (Exception)
+        catch
         {
             return responseBodyText;
         }

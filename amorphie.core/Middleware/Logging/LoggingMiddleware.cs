@@ -28,7 +28,7 @@ public class LoggingMiddleware
             }
             else
             {
-                requestInfo = await LogRequest(context);
+                requestInfo = await LogRequestAsync(context);
                 if (_loggingOptions.LogResponse)
                 {
                     //Buffer response body
@@ -87,9 +87,9 @@ public class LoggingMiddleware
         await context.Response.WriteAsync(LoggingJsonSerializer.Serialize(errorDto));
     }
 
-    private async Task<string> LogRequest(HttpContext context)
+    private async Task<string> LogRequestAsync(HttpContext context)
     {
-        JsonObject requestInfo = new JsonObject();
+        var requestInfo = new JsonObject();
         var request = context.Request;
         requestInfo.Add("Http", $"{request.Method} {request.Path}");
         requestInfo.Add("Host", request.Host.ToString());
@@ -110,7 +110,7 @@ public class LoggingMiddleware
     }
     private JsonObject RequestHeaders(HttpContext httpContext)
     {
-        JsonObject requestHeaders = new JsonObject();
+        var requestHeaders = new JsonObject();
         foreach (var pair in httpContext.Request.Headers)
         {
             if (_loggingOptions.SanitizeHeaderNames?.Contains(pair.Key.ToLower()) == true)
@@ -147,7 +147,7 @@ public class LoggingMiddleware
 
     private string LogResponseBody(string responseBodyText)
     {
-        if (_loggingOptions.SanitizeFieldNames != null && _loggingOptions.SanitizeFieldNames.Length > 0)
+        if (_loggingOptions.SanitizeFieldNames?.Length > 0)
         {
             responseBodyText = LoggingHelper.FilterResponse(responseBodyText, _loggingOptions.SanitizeFieldNames);
         }
