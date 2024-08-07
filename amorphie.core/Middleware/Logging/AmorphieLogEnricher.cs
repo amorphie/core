@@ -54,7 +54,8 @@ public class AmorphieLogEnricher : ILogEventEnricher
 
                 if (httpContext.Request.Path.HasValue)
                 {
-                    AddPropertyIfAbsent("RequestPath", httpContext.Request.Path.Value);
+                    _logEvent.AddOrUpdateProperty(_propertyFactory.CreateProperty("RequestPath", $"{httpContext.Request.Path.Value}&{httpContext.Request.QueryString}", true));
+
                 }
             }
             catch (Exception ex)
