@@ -54,7 +54,7 @@ public class AmorphieLogEnricher : ILogEventEnricher
 
                 if (httpContext.Request.Path.HasValue)
                 {
-                    _logEvent.AddOrUpdateProperty(_propertyFactory.CreateProperty("RequestPath", $"{httpContext.Request.Path.Value}&{httpContext.Request.QueryString}", true));
+                    _logEvent.AddOrUpdateProperty(_propertyFactory.CreateProperty("RequestPath", $"{httpContext.Request.Path.Value}{httpContext.Request.QueryString}", true));
 
                 }
             }
