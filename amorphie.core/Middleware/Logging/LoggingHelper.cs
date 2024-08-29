@@ -6,7 +6,7 @@ namespace amorphie.core.Middleware.Logging;
 public static class LoggingHelper
 {
     private static string[]? _redactKeys;
-    public static string FilterResponse(string responseBodyText, string[] redactKeys)
+    public static string FilterContent(string responseBodyText, string[] redactKeys)
     {
         if (string.IsNullOrEmpty(responseBodyText))
         {
@@ -30,7 +30,8 @@ public static class LoggingHelper
                 }
                 if (responseAsJson[key] is not null)
                 {
-                    if (responseAsJson[key]!.GetValueKind() == JsonValueKind.Object)
+                    var valueKind = responseAsJson[key]!.GetValueKind();
+                    if (valueKind == JsonValueKind.Object)
                     {
                         var innerDict = responseAsJson[key] as IDictionary<string, JsonNode>;
                         if (innerDict != null)
@@ -40,7 +41,7 @@ public static class LoggingHelper
 
                         }
                     }
-                    else if (responseAsJson[key]!.GetValueKind() == JsonValueKind.String)
+                    else if (valueKind == JsonValueKind.String || valueKind == JsonValueKind.Number)
                     {
                         responseAsJson[key] = FilterString(key, responseAsJson[key]!.ToString());
                     }
