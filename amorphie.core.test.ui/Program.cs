@@ -2,6 +2,7 @@
 using System.Reflection;
 using amorphie.core.Middleware;
 using amorphie.core.Middleware.Logging;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,8 +23,8 @@ if (app.Environment.IsDevelopment())
 
 var summaries = new[]
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+    };
 
 app.MapGet("/weatherforecast", (ILogger<object> logger) =>
 {
@@ -34,7 +35,7 @@ app.MapGet("/weatherforecast", (ILogger<object> logger) =>
     logger.LogError("Error Log Message");
     logger.LogCritical("Critical Log Message");
 
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
+    var forecast = Enumerable.Range(1, 5).Select(index =>
         new WeatherForecast
         (
             DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
@@ -42,11 +43,32 @@ app.MapGet("/weatherforecast", (ILogger<object> logger) =>
             summaries[Random.Shared.Next(summaries.Length)]
         ))
         .ToArray();
-    return forecast;
+    return new { forecast = forecast };
 })
 .WithName("GetWeatherForecast")
 .WithOpenApi();
 
+app.MapPost("/weatherforecast/{varr}", (ILogger<object> logger, [FromRoute(Name = "varr")] Guid varr) =>
+{
+    logger.LogTrace("Trace Log Message");
+    logger.LogDebug("Debug Log Message");
+    logger.LogInformation("Information Log Message");
+    logger.LogWarning("Warning Log Message");
+    logger.LogError("Error Log Message");
+    logger.LogCritical("Critical Log Message");
+
+    var forecast = Enumerable.Range(1, 5).Select(index =>
+        new WeatherForecast
+        (
+            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+            Random.Shared.Next(-20, 55),
+            summaries[Random.Shared.Next(summaries.Length)]
+        ))
+        .ToArray();
+    return new { forecast = forecast };
+})
+.WithName("PostWeatherForecast")
+.WithOpenApi();
 
 app.UseLoggingHandlerMiddlewares();
 app.Run();
@@ -55,4 +77,3 @@ record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
-

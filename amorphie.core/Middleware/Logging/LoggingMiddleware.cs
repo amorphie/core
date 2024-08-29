@@ -123,6 +123,10 @@ public class LoggingMiddleware
             using var reader = new StreamReader(request.Body, encoding ?? Encoding.UTF8, leaveOpen: true);
             string body = await reader.ReadToEndAsync();
             body = body.Replace("\n", "").Replace("\r", "").Replace(" ", "");
+            if (_loggingOptions.SanitizeFieldNames?.Length > 0)
+            {
+                body = LoggingHelper.FilterContent(body, _loggingOptions.SanitizeFieldNames);
+            }
             request.Body.Position = 0;
 
             return body;
@@ -133,7 +137,7 @@ public class LoggingMiddleware
     {
         if (_loggingOptions.SanitizeFieldNames?.Length > 0)
         {
-            responseBodyText = LoggingHelper.FilterResponse(responseBodyText, _loggingOptions.SanitizeFieldNames);
+            responseBodyText = LoggingHelper.FilterContent(responseBodyText, _loggingOptions.SanitizeFieldNames);
         }
         return responseBodyText;
     }
