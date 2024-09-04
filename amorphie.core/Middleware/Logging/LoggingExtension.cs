@@ -26,7 +26,8 @@ public static class LoggingExtension
 
         builder.Services.AddHttpContextAccessor();
         builder.Services.TryAddSingleton<ILogEventEnricher, TEnricher>();
-
+        //https://github.com/dotnet/aspnetcore/issues/48355
+        builder.Services.Configure<RouteHandlerOptions>(options => options.ThrowOnBadRequest = true);
         builder.Logging.ClearProviders();
 
         builder.Host.UseSerilog((_, serviceProvider, loggerConfiguration) =>
