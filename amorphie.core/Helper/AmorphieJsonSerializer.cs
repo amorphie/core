@@ -14,7 +14,7 @@ public static class AmorphieJsonSerializer
     }
     private static JsonSerializerOptions opt = new()
     {
-        PropertyNameCaseInsensitive = true,
+        PropertyNameCaseInsensitive = false,
         //WriteIndented = true,
         //Encoder = JavaScriptEncoder.Create(GetEncoderSettings())
         //Encoder = JavaScriptEncoder.Create(new TextEncoderSettings(UnicodeRanges.All))
