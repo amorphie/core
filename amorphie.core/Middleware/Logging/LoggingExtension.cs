@@ -16,7 +16,7 @@ public static class LoggingExtension
         var sanitizeHeaderNames = loggingSection.GetValue<string>(nameof(LoggingOptions.SanitizeHeaderNames));
         loggingOptions.SanitizeHeaderNames = sanitizeHeaderNames?.Split(',');
         var ignorePaths = loggingSection.GetValue<string>(nameof(LoggingOptions.IgnorePaths));
-        loggingOptions.IgnorePaths = ignorePaths?.Split(',');
+        loggingOptions.IgnorePaths = ignorePaths?.Split(',', StringSplitOptions.TrimEntries);
         app.UseMiddleware<LoggingMiddleware>(loggingOptions);
 
     }
