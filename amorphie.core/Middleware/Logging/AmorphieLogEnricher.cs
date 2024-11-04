@@ -15,6 +15,22 @@ public class AmorphieLogEnricher : ILogEventEnricher
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     private readonly string[] wild = { "Authorization", "Password" };
+
+    private readonly string[] _optionalHeaders = {"user_reference",
+        "X-Subject",
+        "X-Device-Id",
+         "x-device-id",
+        "X-Token-Id",
+        "x-token-id",
+        "X-Customer",
+        "X-Workflow-Name",
+        "X-Instance-Id",
+        "x-instance-id",
+        "X-Request-Id",
+        "x-request-id",
+        "X-Installation-Id",
+        "x-installation-id"};
+
     private readonly IOptionsMonitor<HttpLoggingOptions> _options;
 
     public AmorphieLogEnricher(IHttpContextAccessor httpContextAccessor, IOptionsMonitor<HttpLoggingOptions> options)
@@ -57,9 +73,13 @@ public class AmorphieLogEnricher : ILogEventEnricher
                     _logEvent.AddOrUpdateProperty(_propertyFactory.CreateProperty("RequestPath", $"{httpContext.Request.Path.Value}{httpContext.Request.QueryString}", true));
 
                 }
-                if (httpContext.Request.Headers.TryGetValue("X-Request-Id", out var requestId))
+                // Log specified optional headers
+                foreach (var headerKey in _optionalHeaders)
                 {
-                    AddPropertyIfAbsent("X-Request-Id", requestId);
+                    if (httpContext.Request.Headers.TryGetValue(headerKey, out var headerValue))
+                    {
+                        AddPropertyIfAbsent(headerKey, headerValue.ToString());
+                    }
                 }
             }
             catch (Exception ex)
@@ -80,5 +100,3 @@ public class AmorphieLogEnricher : ILogEventEnricher
     }
 
 }
-
-
