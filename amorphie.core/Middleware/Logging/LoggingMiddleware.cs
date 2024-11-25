@@ -1,13 +1,14 @@
 ﻿using System.Net;
 using System.Text.Json.Nodes;
 using System.Text;
+using System.Diagnostics;
 namespace amorphie.core.Middleware.Logging;
 public class LoggingMiddleware
 {
     private readonly RequestDelegate _next;
     private readonly ILogger _logger;
     private readonly LoggingOptions _loggingOptions;
-    private const string _logTemplate = "RequestMethod : {RequestMethod}, RequestBody : {RequestBody}, RequestHost : {RequestHost}, RequestHeader : {RequestHeader}, ResponseBody : {ResponseBody}, ResponseStatus : {ResponseStatus}";
+    private const string _logTemplate = "RequestMethod : {RequestMethod}, RequestBody : {RequestBody}, RequestHost : {RequestHost}, RequestHeader : {RequestHeader}, ResponseBody : {ResponseBody}, ResponseStatus : {ResponseStatus}, ElapsedTime : {ElapsedTime}";
     public LoggingMiddleware(RequestDelegate next, ILoggerFactory loggerFactory, LoggingOptions loggingOptions)
     {
         _next = next;
@@ -21,8 +22,10 @@ public class LoggingMiddleware
         string? requestHeaders = null;
         string? requestBody = null;
         string? responseBody = null;
+        var stopWatch = Stopwatch.StartNew();
         try
         {
+
             //if path is ignored do not log
             if (context.Request.Path.HasValue && _loggingOptions.IgnorePaths != null && Array.Exists(_loggingOptions.IgnorePaths, context.Request.Path.Value.Contains))
             {
@@ -44,13 +47,15 @@ public class LoggingMiddleware
                 {
                     await _next(context);
                 }
+                stopWatch.Stop();
                 _logger.LogInformation(_logTemplate,
                     context.Request.Method,
                     requestBody,
                     context.Request.Host,
                     requestHeaders,
                     responseBody,
-                    context.Response.StatusCode);
+                    context.Response.StatusCode,
+                    stopWatch.ElapsedMilliseconds);
             }
         }
         catch (Exception ex)
@@ -59,7 +64,9 @@ public class LoggingMiddleware
             {
                 context.Response.Body = originalResponseBody;
             }
-            await HandleExceptionAsync(context, ex, requestHeaders, requestBody, responseBody);
+            stopWatch.Stop();
+
+            await HandleExceptionAsync(context, ex, requestHeaders, requestBody, responseBody, stopWatch.ElapsedMilliseconds);
         }
     }
 
@@ -78,7 +85,7 @@ public class LoggingMiddleware
         return LogResponseBody(responseBodyText);
     }
 
-    private async Task HandleExceptionAsync(HttpContext context, Exception ex, string? requestHeaders, string? requestBody, string? responseBody)
+    private async Task HandleExceptionAsync(HttpContext context, Exception ex, string? requestHeaders, string? requestBody, string? responseBody, long elapsedTime)
     {
         var errorMessage = "An error occured and logged. Use trace identifier id to find out details";
         var errorDto = new ErrorModel
@@ -95,7 +102,8 @@ public class LoggingMiddleware
             context.Request.Host,
             requestHeaders,
             responseBody,
-            context.Response.StatusCode);
+            context.Response.StatusCode,
+            elapsedTime);
         await context.Response.WriteAsync(LoggingJsonSerializer.Serialize(errorDto));
     }
 
