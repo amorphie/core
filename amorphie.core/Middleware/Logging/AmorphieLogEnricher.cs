@@ -29,7 +29,11 @@ public class AmorphieLogEnricher : ILogEventEnricher
         "X-Request-Id",
         "x-request-id",
         "X-Installation-Id",
-        "x-installation-id"};
+        "x-installation-id",
+        "X-Application",
+        "Clientipaddress",
+        "Clientid",
+        "Jti"};
 
     private readonly IOptionsMonitor<HttpLoggingOptions> _options;
 
