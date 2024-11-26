@@ -38,12 +38,15 @@ public static class LoggingHelper
                         {
                             var decResult = FilterDictionary(innerDict);
                             responseAsJson[key] = decResult as JsonObject;
-
                         }
                     }
                     else if (valueKind == JsonValueKind.String || valueKind == JsonValueKind.Number)
                     {
-                        responseAsJson[key] = FilterString(key, responseAsJson[key]!.ToString());
+                        var valueToBeRedacted = responseAsJson[key]!.ToString();
+                        if (valueToBeRedacted.StartsWith('{'))
+                        {
+                            responseAsJson[key] = FilterContent(responseAsJson[key]!.ToString(), redactKeys);
+                        }
                     }
                 }
             }
