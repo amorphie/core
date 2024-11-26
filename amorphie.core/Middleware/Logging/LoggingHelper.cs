@@ -43,7 +43,22 @@ public static class LoggingHelper
                     }
                     else if (valueKind == JsonValueKind.String || valueKind == JsonValueKind.Number)
                     {
-                        responseAsJson[key] = FilterString(key, responseAsJson[key]!.ToString());
+                        var valueToBeRedacted = responseAsJson[key]!.ToString();
+                        if (valueToBeRedacted.StartsWith('{'))
+                        {
+                            try
+                            {
+                                responseAsJson[key] = FilterContent(responseAsJson[key]!.ToString(), redactKeys);
+                            }
+                            catch
+                            {
+                                //Do nothing
+                            }
+                        }
+                        else
+                        {
+                            responseAsJson[key] = FilterString(key, valueToBeRedacted);
+                        }
                     }
                 }
             }
