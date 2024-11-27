@@ -82,7 +82,7 @@ public class LoggingMiddleware
         newResponseBody.Seek(0, SeekOrigin.Begin);
         await newResponseBody.CopyToAsync(originalResponseBody);
 
-        return LogResponseBody(responseBodyText);
+        return responseBodyText;
     }
 
     private async Task HandleExceptionAsync(HttpContext context, Exception ex, string? requestHeaders, string? requestBody, string? responseBody, long elapsedTime)
@@ -112,14 +112,7 @@ public class LoggingMiddleware
         var requestHeaders = new JsonObject();
         foreach (var pair in httpContext.Request.Headers)
         {
-            if (_loggingOptions.SanitizeHeaderNames?.Contains(pair.Key.ToLower()) == true)
-            {
-                requestHeaders.Add(pair.Key, "***");
-            }
-            else
-            {
-                requestHeaders.Add(pair.Key, pair.Value.ToString().Replace("\"", ""));
-            }
+            requestHeaders.Add(pair.Key, pair.Value.ToString().Replace("\"", ""));
         }
         return requestHeaders.ToJsonString();
     }
@@ -130,26 +123,11 @@ public class LoggingMiddleware
             request.EnableBuffering();
             using var reader = new StreamReader(request.Body, encoding ?? Encoding.UTF8, leaveOpen: true);
             string body = await reader.ReadToEndAsync();
-            body = body.Replace("\n", "").Replace("\r", "").Replace(" ", "");
-            if (_loggingOptions.SanitizeFieldNames?.Length > 0)
-            {
-                body = LoggingHelper.FilterContent(body, _loggingOptions.SanitizeFieldNames);
-            }
             request.Body.Position = 0;
-
             return body;
         }
         return "";
     }
-    private string LogResponseBody(string responseBodyText)
-    {
-        if (_loggingOptions.SanitizeFieldNames?.Length > 0)
-        {
-            responseBodyText = LoggingHelper.FilterContent(responseBodyText, _loggingOptions.SanitizeFieldNames);
-        }
-        return responseBodyText;
-    }
-
 
     private class ErrorModel
     {
