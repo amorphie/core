@@ -33,7 +33,8 @@ public class AmorphieLogEnricher : ILogEventEnricher
         "X-Application",
         "Clientipaddress",
         "Clientid",
-        "Jti"};
+        "Jti",
+        "X-Session-Id"};
 
     private readonly IOptionsMonitor<HttpLoggingOptions> _options;
 
