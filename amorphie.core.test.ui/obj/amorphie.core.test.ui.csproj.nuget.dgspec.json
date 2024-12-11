@@ -1,35 +1,36 @@
 {
   "format": 1,
   "restore": {
-    "/Users/mt/Documents/core/core/amorphie.core.test.ui/amorphie.core.test.ui.csproj": {}
+    "C:\\repos\\amorphie\\core\\amorphie.core.test.ui\\amorphie.core.test.ui.csproj": {}
   },
   "projects": {
-    "/Users/mt/Documents/core/core/amorphie.core.test.ui/amorphie.core.test.ui.csproj": {
+    "C:\\repos\\amorphie\\core\\amorphie.core.test.ui\\amorphie.core.test.ui.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mt/Documents/core/core/amorphie.core.test.ui/amorphie.core.test.ui.csproj",
+        "projectUniqueName": "C:\\repos\\amorphie\\core\\amorphie.core.test.ui\\amorphie.core.test.ui.csproj",
         "projectName": "amorphie.core.test.ui",
-        "projectPath": "/Users/mt/Documents/core/core/amorphie.core.test.ui/amorphie.core.test.ui.csproj",
-        "packagesPath": "/Users/mt/.nuget/packages/",
-        "outputPath": "/Users/mt/Documents/core/core/amorphie.core.test.ui/obj/",
+        "projectPath": "C:\\repos\\amorphie\\core\\amorphie.core.test.ui\\amorphie.core.test.ui.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\repos\\amorphie\\core\\amorphie.core.test.ui\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mt/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net7.0"
+          "net8.0"
         ],
         "sources": {
-          "/usr/local/share/dotnet/library-packs": {},
-          "/usr/local/share/dotnet/sdk/7.0.312/Sdks/Microsoft.NET.Sdk.Web/library-packs": {},
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net7.0": {
-            "targetAlias": "net7.0",
+          "net8.0": {
+            "targetAlias": "net8.0",
             "projectReferences": {
-              "/Users/mt/Documents/core/core/amorphie.core/amorphie.core.csproj": {
-                "projectPath": "/Users/mt/Documents/core/core/amorphie.core/amorphie.core.csproj"
+              "C:\\repos\\amorphie\\core\\amorphie.core\\amorphie.core.csproj": {
+                "projectPath": "C:\\repos\\amorphie\\core\\amorphie.core\\amorphie.core.csproj"
               }
             }
           }
@@ -38,15 +39,24 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
+        "net8.0": {
+          "targetAlias": "net8.0",
           "dependencies": {
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
-              "version": "[7.0.15, )"
+              "version": "[8.0.1, )"
+            },
+            "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
+              "target": "Package",
+              "version": "[1.21.0, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
@@ -72,33 +82,34 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.312/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "/Users/mt/Documents/core/core/amorphie.core/amorphie.core.csproj": {
+    "C:\\repos\\amorphie\\core\\amorphie.core\\amorphie.core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/mt/Documents/core/core/amorphie.core/amorphie.core.csproj",
+        "projectUniqueName": "C:\\repos\\amorphie\\core\\amorphie.core\\amorphie.core.csproj",
         "projectName": "amorphie.core",
-        "projectPath": "/Users/mt/Documents/core/core/amorphie.core/amorphie.core.csproj",
-        "packagesPath": "/Users/mt/.nuget/packages/",
-        "outputPath": "/Users/mt/Documents/core/core/amorphie.core/obj/",
+        "projectPath": "C:\\repos\\amorphie\\core\\amorphie.core\\amorphie.core.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\repos\\amorphie\\core\\amorphie.core\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/mt/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net7.0"
+          "net8.0"
         ],
         "sources": {
-          "/usr/local/share/dotnet/library-packs": {},
-          "/usr/local/share/dotnet/sdk/7.0.312/Sdks/Microsoft.NET.Sdk.Web/library-packs": {},
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net7.0": {
-            "targetAlias": "net7.0",
+          "net8.0": {
+            "targetAlias": "net8.0",
             "projectReferences": {}
           }
         },
@@ -106,11 +117,16 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
+        "net8.0": {
+          "targetAlias": "net8.0",
           "dependencies": {
             "AutoMapper": {
               "target": "Package",
@@ -124,17 +140,21 @@
               "target": "Package",
               "version": "[1.12.0, )"
             },
+            "Elastic.Apm.SerilogEnricher": {
+              "target": "Package",
+              "version": "[8.12.3, )"
+            },
             "Elastic.CommonSchema.Serilog": {
               "target": "Package",
-              "version": "[8.6.1, )"
+              "version": "[8.12.3, )"
             },
             "Elastic.Serilog.Sinks": {
               "target": "Package",
-              "version": "[8.6.1, )"
+              "version": "[8.12.3, )"
             },
             "FluentValidation": {
               "target": "Package",
-              "version": "[11.8.1, )"
+              "version": "[11.9.0, )"
             },
             "FluentValidation.AspNetCore": {
               "target": "Package",
@@ -142,15 +162,19 @@
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
-              "version": "[7.0.13, )"
+              "version": "[8.0.1, )"
             },
             "Microsoft.Extensions.Diagnostics.HealthChecks": {
               "target": "Package",
-              "version": "[8.0.0, )"
+              "version": "[8.0.1, )"
             },
             "Microsoft.Extensions.Http.Polly": {
               "target": "Package",
-              "version": "[8.0.0, )"
+              "version": "[8.0.1, )"
+            },
+            "NJsonSchema": {
+              "target": "Package",
+              "version": "[11.0.2, )"
             },
             "Newtonsoft.Json": {
               "target": "Package",
@@ -158,19 +182,19 @@
             },
             "Polly": {
               "target": "Package",
-              "version": "[8.2.0, )"
+              "version": "[8.2.1, )"
             },
             "Refit": {
               "target": "Package",
-              "version": "[7.0.0, )"
+              "version": "[8.0.0, )"
             },
             "Refit.HttpClientFactory": {
               "target": "Package",
-              "version": "[7.0.0, )"
+              "version": "[8.0.0, )"
             },
             "Serilog.AspNetCore": {
               "target": "Package",
-              "version": "[8.0.0, )"
+              "version": "[8.0.1, )"
             },
             "Serilog.Enrichers.CorrelationId": {
               "target": "Package",
@@ -224,7 +248,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.312/RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
