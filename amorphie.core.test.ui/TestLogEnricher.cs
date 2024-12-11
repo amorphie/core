@@ -3,42 +3,21 @@ using Serilog.Events;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Options;
 using Serilog;
-using System.Text;
-using Microsoft.AspNetCore.Http;
-using System.Linq;
 
-namespace amorphie.core.Middleware.Logging;
+namespace amorphie.workflow.core.test.ui;
 
-public class AmorphieLogEnricher : ILogEventEnricher
+public class TestLogEnricher : ILogEventEnricher
 {
     private const string InstanceId = "InstanceId";
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     private readonly string[] wild = { "Authorization", "Password" };
 
-    private readonly string[] _optionalHeaders = {"user_reference",
-        "X-Subject",
-        "X-Device-Id",
-         "x-device-id",
-        "X-Token-Id",
-        "x-token-id",
-        "X-Customer",
-        "X-Workflow-Name",
-        "X-Instance-Id",
-        "x-instance-id",
-        "X-Request-Id",
-        "x-request-id",
-        "X-Installation-Id",
-        "x-installation-id",
-        "X-Application",
-        "Clientipaddress",
-        "Clientid",
-        "Jti",
-        "X-Session-Id"};
+    private readonly string[] _optionalHeaders = { "accept" };
 
     private readonly IOptionsMonitor<HttpLoggingOptions> _options;
 
-    public AmorphieLogEnricher(IHttpContextAccessor httpContextAccessor, IOptionsMonitor<HttpLoggingOptions> options)
+    public TestLogEnricher(IHttpContextAccessor httpContextAccessor, IOptionsMonitor<HttpLoggingOptions> options)
     {
         _httpContextAccessor = httpContextAccessor;
         _options = options;
@@ -68,11 +47,6 @@ public class AmorphieLogEnricher : ILogEventEnricher
                 {
                     httpContext.Items.TryGetValue(InstanceId, out instanceId);
                 }
-                if (instanceId != null)
-                {
-                    AddPropertyIfAbsent($"correlation.{InstanceId}", instanceId);
-                }
-
                 if (httpContext.Request.Path.HasValue)
                 {
                     _logEvent.AddOrUpdateProperty(_propertyFactory.CreateProperty("RequestPath", $"{httpContext.Request.Path.Value}{httpContext.Request.QueryString}", true));
@@ -83,7 +57,7 @@ public class AmorphieLogEnricher : ILogEventEnricher
                 {
                     if (httpContext.Request.Headers.TryGetValue(headerKey, out var headerValue))
                     {
-                        AddPropertyIfAbsent(headerKey, headerValue.ToString());
+                        _logEvent.AddPropertyIfAbsent(_propertyFactory.CreateProperty(headerKey, headerValue, true));
                     }
                 }
             }
@@ -92,16 +66,7 @@ public class AmorphieLogEnricher : ILogEventEnricher
                 Log.Fatal("TraceIdentifier: {TraceIdentifier}. Log enrichment with httpcontext props failed. Exception: {ex}", httpContext.TraceIdentifier, ex);
             }
         }
-
-        AddPropertyIfAbsent("Environment", Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "None");
-        AddPropertyIfAbsent("ApplicationName", Environment.GetEnvironmentVariable("ApplicationName") ?? "None");
     }
-    void AddPropertyIfAbsent(string key, object value)
-    {
-        if (wild.Contains(key))
-            value = "******";
-
-        _logEvent.AddPropertyIfAbsent(_propertyFactory.CreateProperty(key, value, true));
-    }
-
 }
+
+

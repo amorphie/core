@@ -20,25 +20,47 @@ public static class LoggingExtension
         app.UseMiddleware<LoggingMiddleware>(loggingOptions);
 
     }
-
+    public static void AddSeriLog(this WebApplicationBuilder builder)
+    {
+        AddSeriLogPrivate(builder);
+    }
     public static void AddSeriLog<TEnricher>(this WebApplicationBuilder builder) where TEnricher : class, ILogEventEnricher
     {
-
+        //amorphie log enricher is the default enricher and will be added by default
+        //if the enricher is not amorphie log enricher then add the custom enricher too
+        if (typeof(TEnricher) == typeof(AmorphieLogEnricher))
+        {
+            AddSeriLogPrivate(builder);
+        }
+        else
+        {
+            builder.Services.TryAddSingleton<ILogEventEnricher, TEnricher>();
+            AddSeriLogPrivate(builder, hasCustomEventEnricher: true);
+        }
+    }
+    private static void AddSeriLogPrivate(WebApplicationBuilder builder, bool? hasCustomEventEnricher = null)
+    {
         builder.Services.AddHttpContextAccessor();
-        builder.Services.TryAddSingleton<ILogEventEnricher, TEnricher>();
+        builder.Services.TryAddSingleton<AmorphieLogEnricher>();
         //https://github.com/dotnet/aspnetcore/issues/48355
         builder.Services.Configure<RouteHandlerOptions>(options => options.ThrowOnBadRequest = true);
         builder.Logging.ClearProviders();
 
         builder.Host.UseSerilog((_, serviceProvider, loggerConfiguration) =>
         {
-            var enricher = serviceProvider.GetRequiredService<ILogEventEnricher>();
+            var amorphieEnricher = serviceProvider.GetRequiredService<AmorphieLogEnricher>();
             loggerConfiguration
                 .ReadFrom.Configuration(builder.Configuration)
-                .Enrich.With(enricher)
+                .Enrich.With(amorphieEnricher)
                 .Enrich.WithElasticApmCorrelationInfo()
                 ;
+            if (hasCustomEventEnricher == true)
+            {
+                var enricher = serviceProvider.GetRequiredService<ILogEventEnricher>();
+                loggerConfiguration.Enrich.With(enricher);
+            }
         });
     }
+
 }
 
