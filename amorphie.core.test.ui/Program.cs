@@ -3,6 +3,7 @@ using System.Reflection;
 using amorphie.core.Middleware;
 using amorphie.core.Middleware.Logging;
 using Microsoft.AspNetCore.Mvc;
+using amorphie.workflow.core.test.ui;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.AddSeriLog<AmorphieLogEnricher>();
+builder.AddSeriLog<TestLogEnricher>();
 
 var app = builder.Build();
 
@@ -28,12 +29,12 @@ var summaries = new[]
 
 app.MapGet("/weatherforecast", (ILogger<object> logger) =>
 {
-    logger.LogTrace("Trace Log Message");
-    logger.LogDebug("Debug Log Message");
-    logger.LogInformation("Information Log Message");
-    logger.LogWarning("Warning Log Message");
-    logger.LogError("Error Log Message");
-    logger.LogCritical("Critical Log Message");
+    //logger.LogTrace("Trace Log Message");
+    //logger.LogDebug("Debug Log Message");
+    //logger.LogInformation("Information Log Message");
+    //logger.LogWarning("Warning Log Message");
+    //logger.LogError("Error Log Message");
+    //logger.LogCritical("Critical Log Message");
 
     var forecast = Enumerable.Range(1, 5).Select(index =>
         new WeatherForecast

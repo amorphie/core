@@ -38,7 +38,6 @@ public static class LoggingHelper
                         {
                             var decResult = FilterDictionary(innerDict);
                             responseAsJson[key] = decResult as JsonObject;
-
                         }
                     }
                     else if (valueKind == JsonValueKind.String || valueKind == JsonValueKind.Number)
@@ -47,7 +46,6 @@ public static class LoggingHelper
                     }
                 }
             }
-
             return LoggingJsonSerializer.Serialize(responseAsJson);
         }
         catch
@@ -55,8 +53,13 @@ public static class LoggingHelper
             return responseBodyText;
         }
     }
-    public static IDictionary<string, JsonNode> FilterDictionary(IDictionary<string, JsonNode> data)
+    const int maxDepth = 24;
+    public static IDictionary<string, JsonNode> FilterDictionary(IDictionary<string, JsonNode> data, int depth = 0)
     {
+        if (depth > maxDepth)
+        {
+            return data;
+        }
         var keys = data.Keys.ToList();
         foreach (var key in keys)
         {
