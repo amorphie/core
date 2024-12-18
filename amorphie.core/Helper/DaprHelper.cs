@@ -7,7 +7,6 @@ public static class DaprHelper
     public static async Task StartUpCheckAsync(DaprClient client)
     {
         using var tokenSource = new CancellationTokenSource(20000);
-        tokenSource.Token.ThrowIfCancellationRequested();
         try
         {
             await client.WaitForSidecarAsync(tokenSource.Token);
