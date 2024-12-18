@@ -11,9 +11,9 @@ public static class DaprHelper
         {
             await client.WaitForSidecarAsync(tokenSource.Token);
         }
-        catch (System.Exception ex)
+        catch (TaskCanceledException ex)
         {
-            Console.WriteLine("Dapr Sidecar Doesn't Respond. Exception: ", ex);
+            Console.WriteLine($"Dapr Sidecar Doesn't Respond. Exception: {ex.Message}");
         }
     }
 }
