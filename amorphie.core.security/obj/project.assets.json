@@ -1,7 +1,7 @@
 {
   "version": 3,
   "targets": {
-    "net7.0": {
+    "net8.0": {
       "Dapr.AspNetCore/1.12.0": {
         "type": "package",
         "dependencies": {
@@ -159,12 +159,12 @@
           "Microsoft.Extensions.Primitives": "8.0.0"
         },
         "compile": {
-          "lib/net7.0/Microsoft.Extensions.Configuration.Abstractions.dll": {
+          "lib/net8.0/Microsoft.Extensions.Configuration.Abstractions.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net7.0/Microsoft.Extensions.Configuration.Abstractions.dll": {
+          "lib/net8.0/Microsoft.Extensions.Configuration.Abstractions.dll": {
             "related": ".xml"
           }
         },
@@ -188,12 +188,12 @@
       "Microsoft.Extensions.Primitives/8.0.0": {
         "type": "package",
         "compile": {
-          "lib/net7.0/Microsoft.Extensions.Primitives.dll": {
+          "lib/net8.0/Microsoft.Extensions.Primitives.dll": {
             "related": ".xml"
           }
         },
         "runtime": {
-          "lib/net7.0/Microsoft.Extensions.Primitives.dll": {
+          "lib/net8.0/Microsoft.Extensions.Primitives.dll": {
             "related": ".xml"
           }
         },
@@ -607,37 +607,37 @@
     }
   },
   "projectFileDependencyGroups": {
-    "net7.0": [
+    "net8.0": [
       "Dapr.AspNetCore >= 1.12.0",
       "Konscious.Security.Cryptography.Argon2 >= 1.3.0",
       "Microsoft.Extensions.Configuration.Abstractions >= 8.0.0"
     ]
   },
   "packageFolders": {
-    "/Users/mt/.nuget/packages/": {}
+    "/Users/tayfunyilmaz/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/mt/Documents/core/core/amorphie.core.security/amorphie.core.security.csproj",
+      "projectUniqueName": "/Users/tayfunyilmaz/Documents/repos/burganbank/core/amorphie.core.security/amorphie.core.security.csproj",
       "projectName": "amorphie.core.security",
-      "projectPath": "/Users/mt/Documents/core/core/amorphie.core.security/amorphie.core.security.csproj",
-      "packagesPath": "/Users/mt/.nuget/packages/",
-      "outputPath": "/Users/mt/Documents/core/core/amorphie.core.security/obj/",
+      "projectPath": "/Users/tayfunyilmaz/Documents/repos/burganbank/core/amorphie.core.security/amorphie.core.security.csproj",
+      "packagesPath": "/Users/tayfunyilmaz/.nuget/packages/",
+      "outputPath": "/Users/tayfunyilmaz/Documents/repos/burganbank/core/amorphie.core.security/obj/",
       "projectStyle": "PackageReference",
+      "UsingMicrosoftNETSdk": false,
       "configFilePaths": [
-        "/Users/mt/.nuget/NuGet/NuGet.Config"
+        "/Users/tayfunyilmaz/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
-        "net7.0"
+        "net8.0"
       ],
       "sources": {
-        "/usr/local/share/dotnet/library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net7.0": {
-          "targetAlias": "net7.0",
+        "net8.0": {
+          "targetAlias": "net8.0",
           "projectReferences": {}
         }
       },
@@ -645,11 +645,16 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "all"
       }
     },
     "frameworks": {
-      "net7.0": {
-        "targetAlias": "net7.0",
+      "net8.0": {
+        "targetAlias": "net8.0",
         "dependencies": {
           "Dapr.AspNetCore": {
             "target": "Package",
@@ -675,12 +680,22 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
+        "downloadDependencies": [
+          {
+            "name": "Microsoft.AspNetCore.App.Ref",
+            "version": "[8.0.11, 8.0.11]"
+          },
+          {
+            "name": "Microsoft.NETCore.App.Ref",
+            "version": "[8.0.11, 8.0.11]"
+          }
+        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/7.0.312/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
