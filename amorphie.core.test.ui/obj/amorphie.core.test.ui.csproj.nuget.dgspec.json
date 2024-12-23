@@ -1,21 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/tayfunyilmaz/Documents/repos/burganbank/core/amorphie.core.test.ui/amorphie.core.test.ui.csproj": {}
+    "/Users/mustafakoker/Codes/core/amorphie.core.test.ui/amorphie.core.test.ui.csproj": {}
   },
   "projects": {
-    "/Users/tayfunyilmaz/Documents/repos/burganbank/core/amorphie.core.test.ui/amorphie.core.test.ui.csproj": {
+    "/Users/mustafakoker/Codes/core/amorphie.core.test.ui/amorphie.core.test.ui.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/tayfunyilmaz/Documents/repos/burganbank/core/amorphie.core.test.ui/amorphie.core.test.ui.csproj",
+        "projectUniqueName": "/Users/mustafakoker/Codes/core/amorphie.core.test.ui/amorphie.core.test.ui.csproj",
         "projectName": "amorphie.core.test.ui",
-        "projectPath": "/Users/tayfunyilmaz/Documents/repos/burganbank/core/amorphie.core.test.ui/amorphie.core.test.ui.csproj",
-        "packagesPath": "/Users/tayfunyilmaz/.nuget/packages/",
-        "outputPath": "/Users/tayfunyilmaz/Documents/repos/burganbank/core/amorphie.core.test.ui/obj/",
+        "projectPath": "/Users/mustafakoker/Codes/core/amorphie.core.test.ui/amorphie.core.test.ui.csproj",
+        "packagesPath": "/Users/mustafakoker/.nuget/packages/",
+        "outputPath": "/Users/mustafakoker/Codes/core/amorphie.core.test.ui/obj/",
         "projectStyle": "PackageReference",
-        "UsingMicrosoftNETSdk": false,
         "configFilePaths": [
-          "/Users/tayfunyilmaz/.nuget/NuGet/NuGet.Config"
+          "/Users/mustafakoker/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -27,8 +26,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "/Users/tayfunyilmaz/Documents/repos/burganbank/core/amorphie.core/amorphie.core.csproj": {
-                "projectPath": "/Users/tayfunyilmaz/Documents/repos/burganbank/core/amorphie.core/amorphie.core.csproj"
+              "/Users/mustafakoker/Codes/core/amorphie.core/amorphie.core.csproj": {
+                "projectPath": "/Users/mustafakoker/Codes/core/amorphie.core/amorphie.core.csproj"
               }
             }
           }
@@ -42,7 +41,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "all"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -98,18 +98,17 @@
         }
       }
     },
-    "/Users/tayfunyilmaz/Documents/repos/burganbank/core/amorphie.core/amorphie.core.csproj": {
+    "/Users/mustafakoker/Codes/core/amorphie.core/amorphie.core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/tayfunyilmaz/Documents/repos/burganbank/core/amorphie.core/amorphie.core.csproj",
+        "projectUniqueName": "/Users/mustafakoker/Codes/core/amorphie.core/amorphie.core.csproj",
         "projectName": "amorphie.core",
-        "projectPath": "/Users/tayfunyilmaz/Documents/repos/burganbank/core/amorphie.core/amorphie.core.csproj",
-        "packagesPath": "/Users/tayfunyilmaz/.nuget/packages/",
-        "outputPath": "/Users/tayfunyilmaz/Documents/repos/burganbank/core/amorphie.core/obj/",
+        "projectPath": "/Users/mustafakoker/Codes/core/amorphie.core/amorphie.core.csproj",
+        "packagesPath": "/Users/mustafakoker/.nuget/packages/",
+        "outputPath": "/Users/mustafakoker/Codes/core/amorphie.core/obj/",
         "projectStyle": "PackageReference",
-        "UsingMicrosoftNETSdk": false,
         "configFilePaths": [
-          "/Users/tayfunyilmaz/.nuget/NuGet/NuGet.Config"
+          "/Users/mustafakoker/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -132,7 +131,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "all"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
