@@ -3,9 +3,9 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'amorphie.core.security/**'
+      - 'Amorphie.Core.Cache/**'
 env:
-  APP_NAME: amorphiecore.security
+  APP_NAME: amorphiecore.cache
 
 jobs:
   ci-cd-worker-app:
