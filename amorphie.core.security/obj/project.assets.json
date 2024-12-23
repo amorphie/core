@@ -614,20 +614,19 @@
     ]
   },
   "packageFolders": {
-    "/Users/tayfunyilmaz/.nuget/packages/": {}
+    "/Users/mustafakoker/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/tayfunyilmaz/Documents/repos/burganbank/core/amorphie.core.security/amorphie.core.security.csproj",
+      "projectUniqueName": "/Users/mustafakoker/Codes/core/amorphie.core.security/amorphie.core.security.csproj",
       "projectName": "amorphie.core.security",
-      "projectPath": "/Users/tayfunyilmaz/Documents/repos/burganbank/core/amorphie.core.security/amorphie.core.security.csproj",
-      "packagesPath": "/Users/tayfunyilmaz/.nuget/packages/",
-      "outputPath": "/Users/tayfunyilmaz/Documents/repos/burganbank/core/amorphie.core.security/obj/",
+      "projectPath": "/Users/mustafakoker/Codes/core/amorphie.core.security/amorphie.core.security.csproj",
+      "packagesPath": "/Users/mustafakoker/.nuget/packages/",
+      "outputPath": "/Users/mustafakoker/Codes/core/amorphie.core.security/obj/",
       "projectStyle": "PackageReference",
-      "UsingMicrosoftNETSdk": false,
       "configFilePaths": [
-        "/Users/tayfunyilmaz/.nuget/NuGet/NuGet.Config"
+        "/Users/mustafakoker/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -650,7 +649,8 @@
         "enableAudit": "true",
         "auditLevel": "low",
         "auditMode": "all"
-      }
+      },
+      "SdkAnalysisLevel": "9.0.100"
     },
     "frameworks": {
       "net8.0": {
