@@ -1,4 +1,4 @@
-name: CI-CD-Worker
+name: amorphie-core-cache-package
 on:
   workflow_dispatch:
     inputs:
@@ -11,10 +11,6 @@ on:
         - info
         - warning
         - debug   
-  push:
-    branches: [ main ]
-    paths:
-      - 'Amorphie.Core.Cache/**'
 env:
   APP_NAME: amorphiecore.cache
 
