@@ -3,9 +3,6 @@ using Serilog.Events;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Options;
 using Serilog;
-using System.Text;
-using Microsoft.AspNetCore.Http;
-using System.Linq;
 
 namespace amorphie.core.Middleware.Logging;
 
@@ -14,50 +11,32 @@ public class AmorphieLogEnricher : ILogEventEnricher
     private const string InstanceId = "InstanceId";
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    private readonly string[] wild = { "Authorization", "Password" };
-
-    private readonly string[] _optionalHeaders = {"user_reference",
-        "X-Subject",
-        "X-Device-Id",
-         "x-device-id",
-        "X-Token-Id",
-        "x-token-id",
-        "X-Customer",
-        "X-Workflow-Name",
-        "X-Instance-Id",
-        "x-instance-id",
-        "X-Request-Id",
-        "x-request-id",
-        "X-Installation-Id",
-        "x-installation-id",
-        "X-Application",
-        "Clientipaddress",
-        "Clientid",
-        "Jti",
-        "X-Session-Id"};
-
-    private readonly IOptionsMonitor<HttpLoggingOptions> _options;
-
-    public AmorphieLogEnricher(IHttpContextAccessor httpContextAccessor, IOptionsMonitor<HttpLoggingOptions> options)
+    public AmorphieLogEnricher(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
-        _options = options;
     }
-
-    private LogEvent _logEvent;
-    private ILogEventPropertyFactory _propertyFactory;
 
     public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
     {
-        _logEvent = logEvent;
-        _propertyFactory = propertyFactory;
-
         var httpContext = _httpContextAccessor.HttpContext;
 
         if (httpContext is not null)
         {
             try
-            {
+            {               
+                if (httpContext.Request.Path.HasValue)
+                {
+                    logEvent.AddOrUpdateProperty(propertyFactory.CreateProperty("RequestPath", $"{httpContext.Request.Path.Value}{httpContext.Request.QueryString}", true));
+                }
+                // Log specified optional headers
+                foreach (var header in LoggingConstants.OptionalHeaders)
+                {
+                    if (httpContext.Request.Headers.TryGetValue(header.Value, out var headerValue))
+                    {
+                        logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty(header.Value, headerValue.ToString(), true));
+                    }
+                }
+
                 object? instanceId = null;
                 var instanceIdInRoute = httpContext.Request.RouteValues.FirstOrDefault(route => route.Value != null && InstanceId.Equals(route.Key, StringComparison.OrdinalIgnoreCase));
                 if (instanceIdInRoute.Value != null)
@@ -70,21 +49,7 @@ public class AmorphieLogEnricher : ILogEventEnricher
                 }
                 if (instanceId != null)
                 {
-                    AddPropertyIfAbsent($"correlation.{InstanceId}", instanceId);
-                }
-
-                if (httpContext.Request.Path.HasValue)
-                {
-                    _logEvent.AddOrUpdateProperty(_propertyFactory.CreateProperty("RequestPath", $"{httpContext.Request.Path.Value}{httpContext.Request.QueryString}", true));
-
-                }
-                // Log specified optional headers
-                foreach (var headerKey in _optionalHeaders)
-                {
-                    if (httpContext.Request.Headers.TryGetValue(headerKey, out var headerValue))
-                    {
-                        AddPropertyIfAbsent(headerKey, headerValue.ToString());
-                    }
+                    logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("X-Instance-Id", instanceId, true));
                 }
             }
             catch (Exception ex)
@@ -92,16 +57,7 @@ public class AmorphieLogEnricher : ILogEventEnricher
                 Log.Fatal("TraceIdentifier: {TraceIdentifier}. Log enrichment with httpcontext props failed. Exception: {ex}", httpContext.TraceIdentifier, ex);
             }
         }
-
-        AddPropertyIfAbsent("Environment", Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "None");
-        AddPropertyIfAbsent("ApplicationName", Environment.GetEnvironmentVariable("ApplicationName") ?? "None");
+        logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("Environment", Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "None", true));
+        logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("ApplicationName", Environment.GetEnvironmentVariable("ApplicationName") ?? "None", true));
     }
-    void AddPropertyIfAbsent(string key, object value)
-    {
-        if (wild.Contains(key))
-            value = "******";
-
-        _logEvent.AddPropertyIfAbsent(_propertyFactory.CreateProperty(key, value, true));
-    }
-
 }
