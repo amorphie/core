@@ -10,7 +10,8 @@ namespace amorphie.core.Service
             _daprClient = daprClient;
         }
         public async ValueTask<TResponse> Get<TResponse,TRequest>(TRequest request, string appId, string methodName) {
-            var test = _daprClient.CreateInvokeMethodRequest<TRequest>(HttpMethod.Get, appId, methodName, request);
+            Dictionary<string, string> keyParameters = new Dictionary<string, string>();
+            var test = _daprClient.CreateInvokeMethodRequest<TRequest>(HttpMethod.Get, appId, methodName, keyParameters, request);
             return await _daprClient.InvokeMethodAsync<TResponse>(test);
         }
         public async ValueTask<TResponse> Get<TResponse>(string appId, string methodName)
@@ -20,7 +21,8 @@ namespace amorphie.core.Service
         }
         public async ValueTask<TResponse> Post<TResponse, TRequest>(TRequest request, string appId, string methodName)
         {
-            var test = _daprClient.CreateInvokeMethodRequest<TRequest>(HttpMethod.Post, appId, methodName, request);
+            Dictionary<string, string> keyParameters = new Dictionary<string, string>();
+            var test = _daprClient.CreateInvokeMethodRequest<TRequest>(HttpMethod.Post, appId, methodName, keyParameters, request);
             return await _daprClient.InvokeMethodAsync<TResponse>(test);
         }
         public async ValueTask<TResponse> Post<TResponse>(string appId, string methodName)
