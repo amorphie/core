@@ -4,6 +4,10 @@ using amorphie.core.Middleware;
 using amorphie.core.Middleware.Logging;
 using Microsoft.AspNetCore.Mvc;
 using amorphie.workflow.core.test.ui;
+using Refit;
+using StackExchange.Redis;
+using Amorphie.Core.Cache.Redis;
+using amorphie.core.test.ui.Modules;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +17,18 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.AddSeriLog<TestLogEnricher>();
 
+
+#region Cache
+builder.AddDistributedCaching();
+
+#endregion
+
+
+
 var app = builder.Build();
+app.UseLoggingHandlerMiddlewares();
+
+app.UseDistributedCaching();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -71,10 +86,13 @@ app.MapPost("/weatherforecast/{varr}", (ILogger<object> logger, [FromRoute(Name 
 .WithName("PostWeatherForecast")
 .WithOpenApi();
 
-app.UseLoggingHandlerMiddlewares();
+
+app.MapGet("/cachetest", CacheModule.GetDefinitionBulkAsync);
+
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
 }
+
