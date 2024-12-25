@@ -19,7 +19,7 @@ public class LoggingMiddleware
     public async Task InvokeAsync(HttpContext context)
     {
         Stream? originalResponseBody = null;
-        string? requestHeaders = null;
+        JsonObject? requestHeaders = null;
         string? requestBody = null;
         string? responseBody = null;
         var stopWatch = Stopwatch.StartNew();
@@ -47,12 +47,13 @@ public class LoggingMiddleware
                 {
                     await _next(context);
                 }
+                var headers = LogResponseHeaders(context, requestHeaders);
                 stopWatch.Stop();
                 _logger.LogInformation(_logTemplate,
                     context.Request.Method,
                     requestBody,
                     context.Request.Host,
-                    requestHeaders,
+                    headers,
                     responseBody,
                     context.Response.StatusCode,
                     stopWatch.ElapsedMilliseconds);
@@ -85,7 +86,7 @@ public class LoggingMiddleware
         return LogResponseBody(responseBodyText);
     }
 
-    private async Task HandleExceptionAsync(HttpContext context, Exception ex, string? requestHeaders, string? requestBody, string? responseBody, long elapsedTime)
+    private async Task HandleExceptionAsync(HttpContext context, Exception ex, JsonObject? requestHeaders, string? requestBody, string? responseBody, long elapsedTime)
     {
         var errorMessage = "An error occured and logged. Use trace identifier id to find out details";
         var errorDto = new ErrorModel
@@ -100,14 +101,14 @@ public class LoggingMiddleware
             context.Request.Method,
             requestBody,
             context.Request.Host,
-            requestHeaders,
+            requestHeaders?.ToJsonString(),
             responseBody,
             context.Response.StatusCode,
             elapsedTime);
         await context.Response.WriteAsync(LoggingJsonSerializer.Serialize(errorDto));
     }
 
-    private string LogRequestHeaders(HttpContext httpContext)
+    private JsonObject LogRequestHeaders(HttpContext httpContext)
     {
         var requestHeaders = new JsonObject();
         foreach (var pair in httpContext.Request.Headers)
@@ -121,7 +122,7 @@ public class LoggingMiddleware
                 requestHeaders.Add(pair.Key, pair.Value.ToString().Replace("\"", ""));
             }
         }
-        return requestHeaders.ToJsonString();
+        return requestHeaders;
     }
     private async ValueTask<string> LogRequestBodyAsync(HttpRequest request, Encoding? encoding = null)
     {
@@ -149,7 +150,14 @@ public class LoggingMiddleware
         }
         return responseBodyText;
     }
-
+    private string LogResponseHeaders(HttpContext httpContext, JsonObject headers)
+    {
+        if (httpContext.Response.Headers.FirstOrDefault(p => p.Key == "FromCache").Key != null)
+        {
+            headers.TryAdd("ResponseHeader_FromCache", "true");
+        }
+        return headers.ToJsonString();
+    }
 
     private class ErrorModel
     {

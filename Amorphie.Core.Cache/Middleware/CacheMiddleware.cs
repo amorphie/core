@@ -61,7 +61,7 @@ public class CacheMiddleware
             var cachedResponse = await _cache.GetAsync(cacheKey);
             if (cachedResponse != null)
             {
-                _logger.LogInformation("Serving response from cache for key: {CacheKey}", cacheKey);
+                context.Response.Headers.Append("FromCache", "true");
                 context.Response.ContentType = "application/json";
                 await context.Response.Body.WriteAsync(cachedResponse);
                 return;
@@ -77,7 +77,7 @@ public class CacheMiddleware
 
             if (context.Response.StatusCode == 200)
             {
-                _logger.LogInformation("Caching response for key: {CacheKey}", cacheKey);
+                _logger.LogDebug("Caching response for key: {CacheKey}", cacheKey);
                 await _cache.SetAsync(cacheKey,
                     Encoding.UTF8.GetBytes(responseBody),
                     new DistributedCacheEntryOptions
@@ -112,8 +112,11 @@ public class CacheMiddleware
 
         foreach (var header in headersToDiffer)
         {
-            KeyValuePair<string, StringValues> pair = request.Headers.Single(x => x.Key == header);
-            keyBuilder.Append($"|{pair.Key}-{pair.Value}");
+            KeyValuePair<string, StringValues> pair = request.Headers.FirstOrDefault(x => x.Key == header);
+            if (pair.Key != null)
+            {
+                keyBuilder.Append($"|{pair.Key}-{pair.Value}");
+            }
         }
 
 
