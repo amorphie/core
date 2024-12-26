@@ -1,3 +1,4 @@
+using System.Net.Http;
 using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
@@ -112,11 +113,10 @@ public class CacheMiddleware
 
         foreach (var header in headersToDiffer)
         {
-            KeyValuePair<string, StringValues> pair = request.Headers.FirstOrDefault(x => x.Key == header);
-            if (pair.Key != null)
+            if (request.Headers.TryGetValue(header, out var headerValue))
             {
-                keyBuilder.Append($"|{pair.Key}-{pair.Value}");
-            }
+                keyBuilder.Append($"|{header}-{headerValue}");
+            }           
         }
 
 
