@@ -16,7 +16,11 @@ public static class LoggingConstants
                 { "xapplication", "X-Application" },
                 { "clientipaddress", "Clientipaddress" },
                 { "clientid", "Clientid" },
-                { "jti", "Jti" }
+                { "jti", "Jti" },
+                { "xdeviceplatform", "X-Device-Platform" },
+                { "xapplicationversion", "X-Application-Version" },
+                { "xdeviceversion", "X-Device-Version" },
+                { "xdeviceinfo", "X-Device-Info" },
             };
 
     public static Dictionary<string, string> OptionalHeaders
