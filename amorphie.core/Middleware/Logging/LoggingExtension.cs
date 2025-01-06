@@ -9,10 +9,10 @@ public static class LoggingExtension
     public static void UseLoggingHandlerMiddlewares(this WebApplication app)
     {
         var loggingOptions = new LoggingOptions();
-        var loggingSection = app.Configuration.GetSection(LoggingOptions.Logging);
+        var loggingSection = app.Configuration.GetSection(LoggingOptions.AmorphieLogging);
         if (loggingSection.GetChildren().Count() == 0)
         {
-            loggingSection = app.Configuration.GetSection(LoggingOptions.AmorphieLogging);
+            loggingSection = app.Configuration.GetSection(LoggingOptions.Logging);
         }
         loggingSection.Bind(loggingOptions);
         var sanitizeFieldNames = loggingSection.GetValue<string>(nameof(LoggingOptions.SanitizeFieldNames));
