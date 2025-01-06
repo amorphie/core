@@ -71,7 +71,7 @@ public class CacheService : ICacheService
         var keys = new List<string>();
 
         pattern = $"{_instanceName}{pattern}";
-        await foreach (var key in server.KeysAsync(pattern: pattern))
+        await foreach (var key in server.KeysAsync(pattern: pattern, flags: CommandFlags.PreferMaster))
         {
             keys.Add(key.ToString());
         }

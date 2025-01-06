@@ -25,17 +25,31 @@ public class LoggingMiddleware
         var stopWatch = Stopwatch.StartNew();
         try
         {
-
+            if (!context.Request.Path.HasValue)
+            {
+                await _next(context);
+            }
             //if path is ignored do not log
-            if (context.Request.Path.HasValue && _loggingOptions.IgnorePaths != null && Array.Exists(_loggingOptions.IgnorePaths, context.Request.Path.Value.Contains))
+            else if (_loggingOptions.IgnorePaths != null && Array.Exists(_loggingOptions.IgnorePaths, context.Request.Path.Value.Contains))
             {
                 await _next(context);
             }
             else
             {
+                context.Request.Headers.TryGetValue(LoggingConstants.Headers.XWorkflowName, out var wfName);
+                var ignoreByWfName = _loggingOptions.IgnoreContentByWorkflowName?.Contains(wfName.ToString()) == true;
+
+
                 requestHeaders = LogRequestHeaders(context);
-                requestBody = await LogRequestBodyAsync(context.Request);
-                if (_loggingOptions.LogResponse)
+
+                requestBody = ignoreByWfName || context.Request.Method == HttpMethod.Get.Method ? "" : await LogRequestBodyAsync(context.Request);
+                //LogResponse must be true and path must not be in IgnoreResponseByPaths
+                if (_loggingOptions.LogResponse &&
+                    !(
+                    Array.Exists(_loggingOptions.IgnoreResponseByPaths, context.Request.Path.Value.Contains) || ignoreByWfName
+
+                    )
+                    )
                 {
                     //Buffer response body
                     using var newResponseBody = new MemoryStream();
