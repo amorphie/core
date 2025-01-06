@@ -5,13 +5,13 @@ public static class LoggingConstants
             {
                 { "user_reference", "user_reference" },
                 { "xsubject", "X-Subject" },
-                { "xdeviceid", "X-Device-Id" },
+                { "xdeviceid", Headers.XDeviceId },
                 { "xtokenid", "X-Token-Id" },
-                { "xcustomer", "X-Customer" },
-                { "xworkflowname", "X-Workflow-Name" },
+                { "xcustomer", Headers.XCustomer },
+                { "xworkflowname", Headers.XWorkflowName },
                 { "xinstanceid", "X-Instance-Id" },
-                { "xrequestid", "X-Request-Id" },
-                { "xinstallationid", "X-Installation-Id" },
+                { "xrequestid", Headers.XRequestId },
+                { "xinstallationid", Headers.XInstallationId },
                 { "traceparent", "traceparent" },
                 { "xapplication", "X-Application" },
                 { "clientipaddress", "Clientipaddress" },
@@ -29,6 +29,14 @@ public static class LoggingConstants
         {
             return optionalHeaders;
         }
+    }
+    public static class Headers
+    {
+        public const string XDeviceId = "X-Device-Id";
+        public const string XCustomer = "X-Customer";
+        public const string XWorkflowName = "X-Workflow-Name";
+        public const string XRequestId = "X-Request-Id";
+        public const string XInstallationId = "X-Installation-Id";
     }
 }
 

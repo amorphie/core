@@ -376,3 +376,4 @@ MigrationBackup/
 /amorphie.core.test.ui/obj/amorphie.core.test.ui.csproj.nuget.g.targets
 /amorphie.core.test.ui/obj/project.assets.json
 /amorphie.core.test.ui/obj/project.nuget.cache
+/.vs/amorphie.core/v17/.futdcache.v2

@@ -10,13 +10,24 @@ public static class LoggingExtension
     {
         var loggingOptions = new LoggingOptions();
         var loggingSection = app.Configuration.GetSection(LoggingOptions.Logging);
+        if (loggingSection.GetChildren().Count() == 0)
+        {
+            loggingSection = app.Configuration.GetSection(LoggingOptions.AmorphieLogging);
+        }
         loggingSection.Bind(loggingOptions);
         var sanitizeFieldNames = loggingSection.GetValue<string>(nameof(LoggingOptions.SanitizeFieldNames));
-        loggingOptions.SanitizeFieldNames = sanitizeFieldNames?.Split(',');
+        loggingOptions.SanitizeFieldNames = sanitizeFieldNames?.Split(',', StringSplitOptions.TrimEntries);
         var sanitizeHeaderNames = loggingSection.GetValue<string>(nameof(LoggingOptions.SanitizeHeaderNames));
-        loggingOptions.SanitizeHeaderNames = sanitizeHeaderNames?.Split(',');
+        loggingOptions.SanitizeHeaderNames = sanitizeHeaderNames?.Split(',', StringSplitOptions.TrimEntries);
         var ignorePaths = loggingSection.GetValue<string>(nameof(LoggingOptions.IgnorePaths));
         loggingOptions.IgnorePaths = ignorePaths?.Split(',', StringSplitOptions.TrimEntries);
+
+        var ignoreResponseByPaths = loggingSection.GetValue<string>(nameof(LoggingOptions.IgnoreResponseByPaths));
+        loggingOptions.IgnoreResponseByPaths = string.IsNullOrEmpty(ignoreResponseByPaths) ? [] : ignoreResponseByPaths?.Split(',', StringSplitOptions.TrimEntries) ?? [];
+
+        var ignoreContentByWorkflowName = loggingSection.GetValue<string>(nameof(LoggingOptions.IgnoreContentByWorkflowName));
+        loggingOptions.IgnoreContentByWorkflowName = string.IsNullOrEmpty(ignoreContentByWorkflowName) ? [] : ignoreContentByWorkflowName?.Split(',', StringSplitOptions.TrimEntries) ?? [];
+
         app.UseMiddleware<LoggingMiddleware>(loggingOptions);
 
     }

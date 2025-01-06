@@ -17,7 +17,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.AddSeriLog<TestLogEnricher>();
 
-
+if (!builder.Environment.IsDevelopment())
+{
+    builder.Services.AddElasticApm();
+}
 #region Cache
 builder.AddDistributedCaching();
 
@@ -88,6 +91,8 @@ app.MapPost("/weatherforecast/{varr}", (ILogger<object> logger, [FromRoute(Name 
 
 
 app.MapGet("/cachetest", CacheModule.GetDefinitionBulkAsync);
+
+app.MapGet("/cachetest2", CacheModule.GetDefinitionBulkAsync);
 
 app.Run();
 
