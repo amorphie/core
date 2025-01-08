@@ -1,7 +1,5 @@
 ﻿using Serilog.Core;
 using Serilog.Events;
-using Microsoft.AspNetCore.HttpLogging;
-using Microsoft.Extensions.Options;
 using Serilog;
 
 namespace amorphie.core.Middleware.Logging;
@@ -10,10 +8,13 @@ public class AmorphieLogEnricher : ILogEventEnricher
 {
     private const string InstanceId = "InstanceId";
     private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly LoggingOptions _loggingOptions;
 
-    public AmorphieLogEnricher(IHttpContextAccessor httpContextAccessor)
+
+    public AmorphieLogEnricher(IHttpContextAccessor httpContextAccessor, LoggingOptions loggingOptions)
     {
         _httpContextAccessor = httpContextAccessor;
+        _loggingOptions = loggingOptions;
     }
 
     public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
@@ -23,10 +24,11 @@ public class AmorphieLogEnricher : ILogEventEnricher
         if (httpContext is not null)
         {
             try
-            {               
+            {
                 if (httpContext.Request.Path.HasValue)
                 {
-                    logEvent.AddOrUpdateProperty(propertyFactory.CreateProperty("RequestPath", $"{httpContext.Request.Path.Value}{httpContext.Request.QueryString}", true));
+                    var filteredQueryString = GetQueryString(httpContext);
+                    logEvent.AddOrUpdateProperty(propertyFactory.CreateProperty("RequestPath", $"{httpContext.Request.Path.Value}{filteredQueryString}", true));
                 }
                 // Log specified optional headers
                 foreach (var header in LoggingConstants.OptionalHeaders)
@@ -59,5 +61,23 @@ public class AmorphieLogEnricher : ILogEventEnricher
         }
         logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("Environment", Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "None", true));
         logEvent.AddPropertyIfAbsent(propertyFactory.CreateProperty("ApplicationName", Environment.GetEnvironmentVariable("ApplicationName") ?? "None", true));
+    }
+    private string GetQueryString(HttpContext httpContext)
+    {
+        var filteredQueryString = "";
+        if (_loggingOptions.SanitizeHeaderNames != null && httpContext.Request.QueryString.HasValue)
+        {
+            var filteredQs = httpContext.Request.Query.Where(q => !Array.Exists(_loggingOptions.SanitizeHeaderNames, q.Key.Equals));
+            filteredQueryString = string.Join("&", filteredQs.Select(q => $"{q.Key}={q.Value}"));
+            if (!string.IsNullOrEmpty(filteredQueryString))
+            {
+                filteredQueryString = "?" + filteredQueryString;
+            }
+        }
+        else if (httpContext.Request.QueryString.HasValue)
+        {
+            filteredQueryString = httpContext.Request.QueryString.ToString();
+        }
+        return filteredQueryString;
     }
 }
