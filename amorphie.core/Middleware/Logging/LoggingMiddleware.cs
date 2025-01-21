@@ -8,7 +8,7 @@ public class LoggingMiddleware
     private readonly RequestDelegate _next;
     private readonly ILogger _logger;
     private readonly LoggingOptions _loggingOptions;
-    private const string _logTemplate = "RequestMethod : {RequestMethod}, RequestBody : {RequestBody}, RequestHost : {RequestHost}, RequestHeader : {RequestHeader}, ResponseBody : {ResponseBody}, ResponseStatus : {ResponseStatus}, ElapsedTime : {ElapsedTime}";
+    private const string _logTemplate = "RequestMethod : {RequestMethod}, RequestBody : {RequestBody}, RequestHost : {RequestHost}, RequestHeader : {RequestHeader}, ResponseBody : {ResponseBody}, ResponseStatus : {ResponseStatus}, ElapsedTime : {ElapsedTime}, RequestLength : {RequestLength}, ResponseLength : {ResponseLength}";
     public LoggingMiddleware(RequestDelegate next, ILoggerFactory loggerFactory, LoggingOptions loggingOptions)
     {
         _next = next;
@@ -63,6 +63,7 @@ public class LoggingMiddleware
                 }
                 var headers = LogResponseHeaders(context, requestHeaders);
                 stopWatch.Stop();
+                var responseLength = responseBody == null ? 0 : System.Text.ASCIIEncoding.Unicode.GetByteCount(responseBody);
                 _logger.LogInformation(_logTemplate,
                     context.Request.Method,
                     requestBody,
@@ -70,7 +71,10 @@ public class LoggingMiddleware
                     headers,
                     responseBody,
                     context.Response.StatusCode,
-                    stopWatch.ElapsedMilliseconds);
+                    stopWatch.ElapsedMilliseconds,
+                    GetByteSize(requestBody),
+                    GetByteSize(responseBody)
+                    );
             }
         }
         catch (Exception ex)
@@ -83,6 +87,11 @@ public class LoggingMiddleware
 
             await HandleExceptionAsync(context, ex, requestHeaders, requestBody, responseBody, stopWatch.ElapsedMilliseconds);
         }
+    }
+
+    private int GetByteSize(string? s)
+    {
+        return s == null ? 0 : ASCIIEncoding.Unicode.GetByteCount(s);
     }
 
 
@@ -118,7 +127,10 @@ public class LoggingMiddleware
             requestHeaders?.ToJsonString(),
             responseBody,
             context.Response.StatusCode,
-            elapsedTime);
+            elapsedTime,
+            GetByteSize(requestBody),
+            GetByteSize(responseBody)
+            );
         await context.Response.WriteAsync(LoggingJsonSerializer.Serialize(errorDto));
     }
 
