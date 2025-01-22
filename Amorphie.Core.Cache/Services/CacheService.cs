@@ -67,15 +67,16 @@ public class CacheService : ICacheService
 
     public async Task<IEnumerable<string>> GetAllKeysAsync(string pattern = "*")
     {
-        var server = _redisConnection.GetServer(_redisConnection.GetEndPoints().First());
         var keys = new List<string>();
-
-        pattern = $"{_instanceName}{pattern}";
-        await foreach (var key in server.KeysAsync(pattern: pattern, flags: CommandFlags.PreferMaster))
+        foreach (var endpoint in _redisConnection.GetEndPoints())
         {
-            keys.Add(key.ToString());
+            var server = _redisConnection.GetServer(endpoint);
+            pattern = $"{_instanceName}{pattern}";
+            await foreach (var key in server.KeysAsync(pattern: pattern, flags: CommandFlags.PreferMaster))
+            {
+                keys.Add(key.ToString());
+            }
         }
-
         return keys;
     }
 }
