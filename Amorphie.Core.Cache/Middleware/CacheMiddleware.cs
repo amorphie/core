@@ -29,6 +29,7 @@ public class CacheMiddleware
     {
         List<string> headers = new List<string>();
         DistributedCacheAttribute? attribute = null;
+        string? overridePathWith = null;
         if (context != null)
         {
             var endPoint = context.GetEndpoint();
@@ -48,6 +49,8 @@ public class CacheMiddleware
         {
             ttl = attribute.TimeToLiveMinutes;
             headers = attribute.HeadersToDiffer;
+            overridePathWith = attribute.OverridePathWith;
+
         }
         else if (endpointFromConfig != null)
         {
@@ -55,7 +58,7 @@ public class CacheMiddleware
         }
 
         var originalBodyStream = context.Response.Body;
-        var cacheKey = GenerateCacheKey(context.Request, headers);
+        var cacheKey = GenerateCacheKey(context.Request, headers, overridePathWith);
 
         try
         {
@@ -101,10 +104,13 @@ public class CacheMiddleware
         return _redisSettings.Endpoints.FirstOrDefault(e => e.IsMatch(path.Value ?? string.Empty));
     }
 
-    private static string GenerateCacheKey(HttpRequest request, List<string> headersToDiffer)
+    private static string GenerateCacheKey(HttpRequest request, List<string> headersToDiffer, string? overridePathWith = null)
     {
         var keyBuilder = new StringBuilder();
-        keyBuilder.Append($"{request.Path}");
+        if (overridePathWith == null)
+            keyBuilder.Append($"{request.Path}");
+        else
+            keyBuilder.Append(overridePathWith);
 
         foreach (var (key, value) in request.Query.OrderBy(x => x.Key))
         {
@@ -116,7 +122,7 @@ public class CacheMiddleware
             if (request.Headers.TryGetValue(header, out var headerValue))
             {
                 keyBuilder.Append($"|{header}-{headerValue}");
-            }           
+            }
         }
 
 
