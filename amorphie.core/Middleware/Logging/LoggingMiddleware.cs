@@ -2,6 +2,8 @@
 using System.Text.Json.Nodes;
 using System.Text;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Routing;
 namespace amorphie.core.Middleware.Logging;
 public class LoggingMiddleware
 {
@@ -36,26 +38,21 @@ public class LoggingMiddleware
             }
             else
             {
+                var routeOption = FindRouteOptionForRequestPath(context.Request.Path.Value);
                 context.Request.Headers.TryGetValue(LoggingConstants.Headers.XWorkflowName, out var wfName);
                 var ignoreByWfName = _loggingOptions.IgnoreContentByWorkflowName?.Contains(wfName.ToString()) == true;
 
+                requestHeaders = LogRequestHeaders(context, routeOption);
 
-                requestHeaders = LogRequestHeaders(context);
+                requestBody = ignoreByWfName || context.Request.Method == HttpMethod.Get.Method ? "" : await LogRequestBodyAsync(context.Request, routeOption);
 
-                requestBody = ignoreByWfName || context.Request.Method == HttpMethod.Get.Method ? "" : await LogRequestBodyAsync(context.Request);
-                //LogResponse must be true and path must not be in IgnoreResponseByPaths
-                if (_loggingOptions.LogResponse &&
-                    !(
-                    Array.Exists(_loggingOptions.IgnoreResponseByPaths, context.Request.Path.Value.Contains) || ignoreByWfName
-
-                    )
-                    )
+                if ((routeOption.LogAll || routeOption.LogResponse) && !ignoreByWfName)
                 {
                     //Buffer response body
                     using var newResponseBody = new MemoryStream();
                     originalResponseBody = context.Response.Body;
                     context.Response.Body = newResponseBody;
-                    responseBody = await InvokeInternalAsync(context, originalResponseBody, newResponseBody);
+                    responseBody = await InvokeInternalAsync(context, originalResponseBody, newResponseBody, routeOption);
                 }
                 else
                 {
@@ -95,7 +92,7 @@ public class LoggingMiddleware
     }
 
 
-    private async Task<string?> InvokeInternalAsync(HttpContext context, Stream originalResponseBody, MemoryStream newResponseBody)
+    private async Task<string?> InvokeInternalAsync(HttpContext context, Stream originalResponseBody, MemoryStream newResponseBody, LoggingRouteOptions routeOptions)
     {
         await _next(context);
         //Read response body
@@ -106,7 +103,7 @@ public class LoggingMiddleware
         newResponseBody.Seek(0, SeekOrigin.Begin);
         await newResponseBody.CopyToAsync(originalResponseBody);
 
-        return LogResponseBody(responseBodyText);
+        return LogResponseBody(responseBodyText, routeOptions);
     }
 
     private async Task HandleExceptionAsync(HttpContext context, Exception ex, JsonObject? requestHeaders, string? requestBody, string? responseBody, long elapsedTime)
@@ -134,33 +131,36 @@ public class LoggingMiddleware
         await context.Response.WriteAsync(LoggingJsonSerializer.Serialize(errorDto));
     }
 
-    private JsonObject LogRequestHeaders(HttpContext httpContext)
+    private JsonObject LogRequestHeaders(HttpContext httpContext, LoggingRouteOptions routeOptions)
     {
         var requestHeaders = new JsonObject();
-        foreach (var pair in httpContext.Request.Headers)
+        if (routeOptions.LogAll || routeOptions.LogHeader)
         {
-            if (_loggingOptions.SanitizeHeaderNames?.Contains(pair.Key.ToLower()) == true)
+            foreach (var pair in httpContext.Request.Headers)
             {
-                requestHeaders.Add(pair.Key, "***");
-            }
-            else
-            {
-                requestHeaders.Add(pair.Key, pair.Value.ToString().Replace("\"", ""));
+                if (routeOptions.IgnoreFields?.Contains(pair.Key.ToLower()) == true)
+                {
+                    requestHeaders.Add(pair.Key, "***");
+                }
+                else
+                {
+                    requestHeaders.Add(pair.Key, pair.Value.ToString().Replace("\"", ""));
+                }
             }
         }
         return requestHeaders;
     }
-    private async ValueTask<string> LogRequestBodyAsync(HttpRequest request, Encoding? encoding = null)
+    private async ValueTask<string> LogRequestBodyAsync(HttpRequest request, LoggingRouteOptions routeOptions, Encoding? encoding = null)
     {
-        if (_loggingOptions.LogRequest)
+        if (routeOptions.LogAll || routeOptions.LogRequest)
         {
             request.EnableBuffering();
             using var reader = new StreamReader(request.Body, encoding ?? Encoding.UTF8, leaveOpen: true);
             string body = await reader.ReadToEndAsync();
             body = body.Replace("\n", "").Replace("\r", "").Replace(" ", "");
-            if (_loggingOptions.SanitizeFieldNames?.Length > 0)
+            if (routeOptions.IgnoreFields?.Length > 0)
             {
-                body = LoggingHelper.FilterContent(body, _loggingOptions.SanitizeFieldNames);
+                body = LoggingHelper.FilterContent(body, routeOptions);
             }
             request.Body.Position = 0;
 
@@ -168,11 +168,11 @@ public class LoggingMiddleware
         }
         return "";
     }
-    private string LogResponseBody(string responseBodyText)
+    private string LogResponseBody(string responseBodyText, LoggingRouteOptions routeOptions)
     {
-        if (_loggingOptions.SanitizeFieldNames?.Length > 0)
+        if (routeOptions.IgnoreFields?.Length > 0)
         {
-            responseBodyText = LoggingHelper.FilterContent(responseBodyText, _loggingOptions.SanitizeFieldNames);
+            responseBodyText = LoggingHelper.FilterContent(responseBodyText, routeOptions);
         }
         return responseBodyText;
     }
@@ -183,6 +183,32 @@ public class LoggingMiddleware
             headers.TryAdd("ResponseHeader_FromCache", "true");
         }
         return headers.ToJsonString();
+    }
+    /// <summary>
+    /// //if option not found for specified route returns default
+    /// </summary>
+    /// <param name="requestPath"></param>
+    /// <returns></returns>
+    private LoggingRouteOptions FindRouteOptionForRequestPath(string requestPath)
+    {
+        foreach (var routeOption in _loggingOptions.Routes)
+        {
+            if (Regex.IsMatch(requestPath, routeOption.Regex))
+            {
+                if (routeOption.IgnoreFields == null)
+                {
+                    routeOption.IgnoreFields = _loggingOptions.Default.IgnoreFields;
+                }
+                if (routeOption.LogFields == null)
+                {
+                    routeOption.LogFields = _loggingOptions.Default.LogFields;
+                }
+                _logger.LogDebug("Logging route option found for path: {RequestPath}, Regex: {Regex}", requestPath, routeOption.Regex);
+                return routeOption;
+            }
+        }
+        _logger.LogDebug("Logging route option NOT found for path: {RequestPath}. Default option is taken", requestPath);
+        return _loggingOptions.Default;
     }
 
     private class ErrorModel

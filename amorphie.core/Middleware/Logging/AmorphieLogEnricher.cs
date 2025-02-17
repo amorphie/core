@@ -65,9 +65,9 @@ public class AmorphieLogEnricher : ILogEventEnricher
     private string GetQueryString(HttpContext httpContext)
     {
         var filteredQueryString = "";
-        if (_loggingOptions.SanitizeHeaderNames != null && httpContext.Request.QueryString.HasValue)
+        if (_loggingOptions.Default.IgnoreFields != null && httpContext.Request.QueryString.HasValue)
         {
-            var filteredQs = httpContext.Request.Query.Where(q => !Array.Exists(_loggingOptions.SanitizeHeaderNames, q.Key.Equals));
+            var filteredQs = httpContext.Request.Query.Where(q => !Array.Exists(_loggingOptions.Default.IgnoreFields, q.Key.Equals));
             filteredQueryString = string.Join("&", filteredQs.Select(q => $"{q.Key}={q.Value}"));
             if (!string.IsNullOrEmpty(filteredQueryString))
             {
