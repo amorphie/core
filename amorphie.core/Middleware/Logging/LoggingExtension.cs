@@ -33,20 +33,23 @@ public static class LoggingExtension
     {
         var loggingOptions = new LoggingOptions();
         var loggingSection = builder.Configuration.GetSection(LoggingOptions.AmorphieLogging);
+        //Note: this if block is added to support backward compatibility. Later this block can be removed
         if (loggingSection.GetChildren().Count() == 0)
         {
             loggingSection = builder.Configuration.GetSection(LoggingOptions.Logging);
+            loggingOptions.Default = new LoggingRouteOptions();
+            var sanitizeFieldNames = loggingSection.GetValue<string>("SanitizeFieldNames");
+            loggingOptions.Default.IgnoreFields = sanitizeFieldNames?.Split(',', StringSplitOptions.TrimEntries);
+
+            loggingOptions.Default.LogResponse = loggingSection.GetValue<bool>("LogResponse");
+            loggingOptions.Default.LogRequest = loggingSection.GetValue<bool>("LogRequest");
+            loggingOptions.Default.LogAll = loggingSection.GetValue<bool>("LogAll");
+
+
+            var ignorePaths = loggingSection.GetValue<string>(nameof(LoggingOptions.IgnorePaths));
+            loggingOptions.IgnorePaths = ignorePaths?.Split(',', StringSplitOptions.TrimEntries);
         }
         loggingSection.Bind(loggingOptions);
-        var sanitizeFieldNames = loggingSection.GetValue<string>(nameof(LoggingOptions.SanitizeFieldNames));
-        loggingOptions.SanitizeFieldNames = sanitizeFieldNames?.Split(',', StringSplitOptions.TrimEntries);
-        var sanitizeHeaderNames = loggingSection.GetValue<string>(nameof(LoggingOptions.SanitizeHeaderNames));
-        loggingOptions.SanitizeHeaderNames = sanitizeHeaderNames?.Split(',', StringSplitOptions.TrimEntries);
-        var ignorePaths = loggingSection.GetValue<string>(nameof(LoggingOptions.IgnorePaths));
-        loggingOptions.IgnorePaths = ignorePaths?.Split(',', StringSplitOptions.TrimEntries);
-
-        var ignoreResponseByPaths = loggingSection.GetValue<string>(nameof(LoggingOptions.IgnoreResponseByPaths));
-        loggingOptions.IgnoreResponseByPaths = string.IsNullOrEmpty(ignoreResponseByPaths) ? [] : ignoreResponseByPaths?.Split(',', StringSplitOptions.TrimEntries) ?? [];
 
         var ignoreContentByWorkflowName = loggingSection.GetValue<string>(nameof(LoggingOptions.IgnoreContentByWorkflowName));
         loggingOptions.IgnoreContentByWorkflowName = string.IsNullOrEmpty(ignoreContentByWorkflowName) ? [] : ignoreContentByWorkflowName?.Split(',', StringSplitOptions.TrimEntries) ?? [];

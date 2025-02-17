@@ -62,9 +62,23 @@ app.MapGet("/weatherforecast", (ILogger<object> logger) =>
             summaries[Random.Shared.Next(summaries.Length)]
         ))
         .ToArray();
-    return new { forecast = forecast };
+    return new { forecast = forecast, newobject =new { caption = "ca", innerForeCast = forecast.FirstOrDefault()} };
 })
 .WithName("GetWeatherForecast")
+.WithOpenApi();
+app.MapGet("/weatherforecast/test", (ILogger<object> logger) =>
+{
+    var forecast = Enumerable.Range(1, 5).Select(index =>
+        new WeatherForecast
+        (
+            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+            Random.Shared.Next(-20, 55),
+            summaries[Random.Shared.Next(summaries.Length)]
+        ))
+        .ToArray();
+    return new { forecast = forecast };
+})
+//.WithName("GetWeatherForecast")
 .WithOpenApi();
 
 app.MapPost("/weatherforecast/{varr}", (ILogger<object> logger, [FromRoute(Name = "varr")] Guid varr) =>

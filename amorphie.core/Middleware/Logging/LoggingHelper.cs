@@ -1,95 +1,82 @@
 ﻿using System.Text.Json.Nodes;
 using System.Text.Json;
+using Microsoft.AspNetCore.Routing;
 
 namespace amorphie.core.Middleware.Logging;
 
 public static class LoggingHelper
 {
-    private static string[]? _redactKeys;
-    public static string FilterContent(string responseBodyText, string[] redactKeys)
+    private static LoggingRouteOptions? _routeOptions;
+    const int maxDepth = 24;
+
+    public static string FilterContent(string responseBodyText, LoggingRouteOptions routeOptions)
     {
         if (string.IsNullOrEmpty(responseBodyText))
         {
             return string.Empty;
         }
-        _redactKeys = redactKeys;
+        _routeOptions = routeOptions;
         try
         {
             var responseAsJson = LoggingJsonSerializer.Deserialize<JsonObject>(responseBodyText);
-            if (responseAsJson == null || redactKeys.Length == 0)
+            if (responseAsJson == null || (routeOptions.IgnoreFields?.Length == 0 && routeOptions.LogFields?.Length == 0))
             {
                 return responseBodyText;
             }
-            var keys = responseAsJson.Select(p => p.Key).ToList();
-            foreach (var key in keys)
-            {
-                if (redactKeys.Contains(key))
-                {
-                    responseAsJson[key] = "***";
-                    continue;
-                }
-                if (responseAsJson[key] is not null)
-                {
-                    var valueKind = responseAsJson[key]!.GetValueKind();
-                    if (valueKind == JsonValueKind.Object)
-                    {
-                        var innerDict = responseAsJson[key] as IDictionary<string, JsonNode>;
-                        if (innerDict != null)
-                        {
-                            var decResult = FilterDictionary(innerDict);
-                            responseAsJson[key] = decResult as JsonObject;
-                        }
-                    }
-                    else if (valueKind == JsonValueKind.String || valueKind == JsonValueKind.Number)
-                    {
-                        responseAsJson[key] = FilterString(key, responseAsJson[key]!.ToString());
-                    }
-                }
-            }
-            return LoggingJsonSerializer.Serialize(responseAsJson);
+            return LoggingJsonSerializer.Serialize(FilterJson(responseAsJson));
         }
         catch
         {
             return responseBodyText;
         }
     }
-    const int maxDepth = 24;
-    public static IDictionary<string, JsonNode> FilterDictionary(IDictionary<string, JsonNode> data, int depth = 0)
+    public static JsonObject FilterJson(JsonObject responseAsJson, int depth = 0)
     {
         if (depth > maxDepth)
         {
-            return data;
+            return responseAsJson;
         }
-        var keys = data.Keys.ToList();
+        var keys = responseAsJson.Select(p => p.Key).ToList();
         foreach (var key in keys)
         {
-            if (_redactKeys!.Contains(key))
+            if (_routeOptions!.IgnoreFields?.Contains(key) == true)
             {
-                data[key] = "***";
+                responseAsJson[key] = "***";
                 continue;
             }
-            if (data[key] is not null)
+            if (_routeOptions!.LogFields?.Contains(key) == false)
             {
-                if (data[key].GetValueKind() == JsonValueKind.Object)
+                responseAsJson[key] = "***";
+                continue;
+            }
+            if (responseAsJson[key] is not null)
+            {
+                var valueKind = responseAsJson[key]!.GetValueKind();
+                if (valueKind == JsonValueKind.Object)
                 {
-                    var innerDict = data[key] as IDictionary<string, JsonNode>;
+                    var innerDict = responseAsJson[key] as JsonObject;
                     if (innerDict != null)
                     {
-                        var decResult = FilterDictionary(innerDict);
-                        data[key] = decResult as JsonObject;
+                        depth++;
+                        var decResult = FilterJson(innerDict, depth);
+                        responseAsJson[key] = decResult;
                     }
                 }
-                else if (data[key].GetValueKind() == JsonValueKind.String)
+                else if (valueKind == JsonValueKind.String || valueKind == JsonValueKind.Number)
                 {
-                    data[key] = FilterString(key, data[key].ToString());
+                    responseAsJson[key] = FilterString(key, responseAsJson[key]!.ToString());
                 }
             }
         }
-        return data;
+        return responseAsJson;
     }
     static string FilterString(string key, string textInResponse)
     {
-        if (_redactKeys!.Contains(key))
+        if (_routeOptions!.IgnoreFields?.Contains(key) == true)
+        {
+            return "***";
+        }
+        if (_routeOptions!.LogFields?.Contains(key) == false)
         {
             return "***";
         }
