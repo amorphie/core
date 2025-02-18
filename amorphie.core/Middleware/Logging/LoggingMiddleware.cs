@@ -191,20 +191,23 @@ public class LoggingMiddleware
     /// <returns></returns>
     private LoggingRouteOptions FindRouteOptionForRequestPath(string requestPath)
     {
-        foreach (var routeOption in _loggingOptions.Routes)
+        if (_loggingOptions.Routes != null)
         {
-            if (Regex.IsMatch(requestPath, routeOption.Regex))
+            foreach (var routeOption in _loggingOptions.Routes)
             {
-                if (routeOption.IgnoreFields == null)
+                if (Regex.IsMatch(requestPath, routeOption.Regex))
                 {
-                    routeOption.IgnoreFields = _loggingOptions.Default.IgnoreFields;
+                    if (routeOption.IgnoreFields == null)
+                    {
+                        routeOption.IgnoreFields = _loggingOptions.Default.IgnoreFields;
+                    }
+                    if (routeOption.LogFields == null)
+                    {
+                        routeOption.LogFields = _loggingOptions.Default.LogFields;
+                    }
+                    _logger.LogDebug("Logging route option found for path: {RequestPath}, Regex: {Regex}", requestPath, routeOption.Regex);
+                    return routeOption;
                 }
-                if (routeOption.LogFields == null)
-                {
-                    routeOption.LogFields = _loggingOptions.Default.LogFields;
-                }
-                _logger.LogDebug("Logging route option found for path: {RequestPath}, Regex: {Regex}", requestPath, routeOption.Regex);
-                return routeOption;
             }
         }
         _logger.LogDebug("Logging route option NOT found for path: {RequestPath}. Default option is taken", requestPath);
