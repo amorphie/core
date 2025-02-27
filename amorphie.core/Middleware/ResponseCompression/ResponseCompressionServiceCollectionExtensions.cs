@@ -26,16 +26,27 @@ public static class ResponseCompressionServiceCollectionExtensions
             options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(mimeTypes);
             options.ExcludedMimeTypes = excludedMimeTypes;
             options.EnableForHttps = responseCompressionConfig.GetValue<bool>("EnableForHttps", true);
-            foreach (var provider in providers)
+            if (providers.Length == 0)
             {
-                switch (provider.ToLowerInvariant())
+                options.Providers.Add<GzipCompressionProvider>();
+                providers = ["gzip"];
+            }
+            else
+            {
+                foreach (var provider in providers)
                 {
-                    case "gzip":
-                        options.Providers.Add<GzipCompressionProvider>();
-                        break;
-                    case "brotli":
-                        options.Providers.Add<BrotliCompressionProvider>();
-                        break;
+                    switch (provider.ToLowerInvariant())
+                    {
+                        case "gzip":
+                            options.Providers.Add<GzipCompressionProvider>();
+                            break;
+                        case "brotli":
+                            options.Providers.Add<BrotliCompressionProvider>();
+                            break;
+                        default:
+                            // Log unknown provider
+                            break;
+                    }
                 }
             }
         });
