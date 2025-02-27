@@ -614,25 +614,28 @@
     ]
   },
   "packageFolders": {
-    "/Users/mustafakoker/.nuget/packages/": {}
+    "/Users/U06347/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/mustafakoker/Codes/core/amorphie.core.security/amorphie.core.security.csproj",
+      "projectUniqueName": "/Users/U06347/Documents/repos/burganbank/core/amorphie.core.security/amorphie.core.security.csproj",
       "projectName": "amorphie.core.security",
-      "projectPath": "/Users/mustafakoker/Codes/core/amorphie.core.security/amorphie.core.security.csproj",
-      "packagesPath": "/Users/mustafakoker/.nuget/packages/",
-      "outputPath": "/Users/mustafakoker/Codes/core/amorphie.core.security/obj/",
+      "projectPath": "/Users/U06347/Documents/repos/burganbank/core/amorphie.core.security/amorphie.core.security.csproj",
+      "packagesPath": "/Users/U06347/.nuget/packages/",
+      "outputPath": "/Users/U06347/Documents/repos/burganbank/core/amorphie.core.security/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/mustafakoker/.nuget/NuGet/NuGet.Config"
+        "/Users/U06347/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
-        "https://api.nuget.org/v3/index.json": {}
+        "https://api.nuget.org/v3/index.json": {},
+        "https://tfs.burgan.com.tr/tfs/DefaultCollection/Amorphie/_packaging/Amorphie/nuget/v3/index.json": {},
+        "https://tfs.burgan.com.tr/tfs/DefaultCollection/_packaging/CardionProject/nuget/v3/index.json": {},
+        "https://tfs.burgan.com.tr/tfs/DefaultCollection/_packaging/HangfirePro/nuget/v3/index.json": {}
       },
       "frameworks": {
         "net8.0": {
@@ -648,7 +651,7 @@
       "restoreAuditProperties": {
         "enableAudit": "true",
         "auditLevel": "low",
-        "auditMode": "all"
+        "auditMode": "direct"
       },
       "SdkAnalysisLevel": "9.0.100"
     },
@@ -680,22 +683,12 @@
         ],
         "assetTargetFallback": true,
         "warn": true,
-        "downloadDependencies": [
-          {
-            "name": "Microsoft.AspNetCore.App.Ref",
-            "version": "[8.0.11, 8.0.11]"
-          },
-          {
-            "name": "Microsoft.NETCore.App.Ref",
-            "version": "[8.0.11, 8.0.11]"
-          }
-        ],
         "frameworkReferences": {
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.100/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.101/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
