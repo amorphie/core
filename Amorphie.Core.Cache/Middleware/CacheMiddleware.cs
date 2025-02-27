@@ -1,13 +1,16 @@
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 
 namespace Amorphie.Core.Cache.Redis;
+
 public class CacheMiddleware
 {
+    private static readonly Regex RoutePatternRegex = new Regex(@"\{(\w+)\}", RegexOptions.Compiled);
     private readonly RequestDelegate _next;
     private readonly IDistributedCache _cache;
     private readonly ILogger<CacheMiddleware> _logger;
@@ -30,6 +33,7 @@ public class CacheMiddleware
         List<string> headers = new List<string>();
         DistributedCacheAttribute? attribute = null;
         string? overridePathWith = null;
+        string? cacheFormat = null;
         if (context != null)
         {
             var endPoint = context.GetEndpoint();
@@ -38,19 +42,21 @@ public class CacheMiddleware
                 attribute = endPoint.Metadata.GetMetadata<DistributedCacheAttribute>();
             }
         }
+
         var endpointFromConfig = GetEndpointSettings(context.Request.Path);
         if ((attribute == null && endpointFromConfig == null) || !IsGetRequest(context.Request))
         {
             await _next(context);
             return;
         }
+
         int ttl = 0;
         if (attribute != null)
         {
             ttl = attribute.TimeToLiveMinutes;
             headers = attribute.HeadersToDiffer;
             overridePathWith = attribute.OverridePathWith;
-
+            cacheFormat = attribute.CacheFormat;
         }
         else if (endpointFromConfig != null)
         {
@@ -58,7 +64,7 @@ public class CacheMiddleware
         }
 
         var originalBodyStream = context.Response.Body;
-        var cacheKey = GenerateCacheKey(context.Request, headers, overridePathWith);
+        var cacheKey = GenerateCacheKey(context.Request, headers, overridePathWith, cacheFormat);
 
         try
         {
@@ -104,29 +110,83 @@ public class CacheMiddleware
         return _redisSettings.Endpoints.FirstOrDefault(e => e.IsMatch(path.Value ?? string.Empty));
     }
 
-    private static string GenerateCacheKey(HttpRequest request, List<string> headersToDiffer, string? overridePathWith = null)
+    private static string GenerateCacheKey(HttpRequest request, List<string> headersToDiffer,
+        string? overridePathWith = null, string? cacheFormat = null)
     {
         var keyBuilder = new StringBuilder();
-        if (overridePathWith == null)
-            keyBuilder.Append($"{request.Path}");
-        else
-            keyBuilder.Append(overridePathWith);
 
-        foreach (var (key, value) in request.Query.OrderBy(x => x.Key))
+        if (!string.IsNullOrEmpty(cacheFormat))
         {
-            keyBuilder.Append($"|{key}-{value}");
+            var cacheKey = BindCacheFormat(request, headersToDiffer, cacheFormat);
+            keyBuilder.Append(cacheKey);
+        }
+        else
+        {
+            keyBuilder.Append(overridePathWith ?? request.Path);
+
+            foreach (var (key, value) in request.Query.OrderBy(x => x.Key))
+            {
+                keyBuilder.Append($"|{key}-{value}");
+            }
+
+            foreach (var header in headersToDiffer)
+            {
+                if (request.Headers.TryGetValue(header, out var headerValue))
+                {
+                    keyBuilder.Append($"|{header}-{headerValue}");
+                }
+            }
+        }
+
+        return keyBuilder.ToString();
+    }
+
+    private static string BindCacheFormat(HttpRequest request, List<string> headersToDiffer, string cacheFormat)
+    {
+        var valueDictionary = new Dictionary<string, string>();
+
+        foreach (var kvp in request.RouteValues)
+        {
+            if (kvp.Value is not null)
+                valueDictionary[kvp.Key] = kvp.Value.ToString()!;
+        }
+
+        foreach (var kvp in request.Query)
+        {
+            valueDictionary[kvp.Key] = kvp.Value.ToString();
         }
 
         foreach (var header in headersToDiffer)
         {
             if (request.Headers.TryGetValue(header, out var headerValue))
             {
-                keyBuilder.Append($"|{header}-{headerValue}");
+                valueDictionary[header] = headerValue.ToString();
             }
         }
+        
+        var resultBuilder = new StringBuilder();
+        int lastIndex = 0;
 
+        foreach (Match match in RoutePatternRegex.Matches(cacheFormat))
+        {
+            resultBuilder.Append(cacheFormat, lastIndex, match.Index - lastIndex);
 
-        return keyBuilder.ToString();
+            var key = match.Groups[1].Value;
+            if (valueDictionary.TryGetValue(key, out var val))
+            {
+                resultBuilder.Append(val); 
+            }
+            else
+            {
+                resultBuilder.Append(match.Value);
+            }
+
+            lastIndex = match.Index + match.Length;
+        }
+        
+        resultBuilder.Append(cacheFormat, lastIndex, cacheFormat.Length - lastIndex);
+
+        return resultBuilder.ToString();
     }
 
     private static bool IsGetRequest(HttpRequest request)

@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Amorphie.Core.Cache", "Amor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "amorphie.core.test", "amorphie.core.test\amorphie.core.test.csproj", "{FF5BB594-B535-4A6C-A2C1-DE55E01628B8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "amorphie.core.benchmark", "amorphie.core.benchmark\amorphie.core.benchmark.csproj", "{C686A3F7-9321-4F46-8922-9CE0296AF4C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{FF5BB594-B535-4A6C-A2C1-DE55E01628B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF5BB594-B535-4A6C-A2C1-DE55E01628B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF5BB594-B535-4A6C-A2C1-DE55E01628B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C686A3F7-9321-4F46-8922-9CE0296AF4C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C686A3F7-9321-4F46-8922-9CE0296AF4C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C686A3F7-9321-4F46-8922-9CE0296AF4C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C686A3F7-9321-4F46-8922-9CE0296AF4C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
