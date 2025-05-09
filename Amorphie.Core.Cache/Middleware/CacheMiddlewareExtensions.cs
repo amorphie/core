@@ -9,9 +9,9 @@ public static class CacheMiddlewareExtensions
     public static void AddDistributedCaching(this WebApplicationBuilder builder)
     {
         var redisSettings = builder.Configuration.GetSection("Redis").Get<RedisSettings>() ?? throw new InvalidOperationException("Redis settings are not configured");
-        builder.Services.AddSingleton(redisSettings);
+        builder.Services.Configure<RedisSettings>(builder.Configuration.GetSection("Redis"));
         // Configure Redis Connection
-        builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+        builder.Services.AddScoped<IConnectionMultiplexer>(sp =>
             ConnectionMultiplexer.Connect(redisSettings.Configuration));
 
         builder.Services.AddStackExchangeRedisCache(options =>
