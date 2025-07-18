@@ -21,6 +21,7 @@ public static class LoggingConstants
                 { "xapplicationversion", "X-Application-Version" },
                 { "xdeviceversion", "X-Device-Version" },
                 { "xdeviceinfo", "X-Device-Info" },
+                { "xlocation", "X-Location" },
             };
 
     public static Dictionary<string, string> OptionalHeaders
