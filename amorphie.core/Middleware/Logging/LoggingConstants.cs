@@ -28,7 +28,9 @@ public static class LoggingConstants
                 { "x_client_cert_serial", "x_client_cert_serial" },
                 { "x_request_id", "x_request_id" },
                 { "x_installation_id", "x_installation_id" },
-                { "x_device_id", "x_device_id" }
+                { "x_device_id", "x_device_id" },
+                { "ResourceUrl", "ResourceUrl" },
+                { "resourceurl", "resourceurl" },
             };
 
     public static Dictionary<string, string> OptionalHeaders
