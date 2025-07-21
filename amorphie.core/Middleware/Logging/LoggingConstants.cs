@@ -22,6 +22,13 @@ public static class LoggingConstants
                 { "xdeviceversion", "X-Device-Version" },
                 { "xdeviceinfo", "X-Device-Info" },
                 { "xlocation", "X-Location" },
+                { "X-JWS-Signature", "X-JWS-Signature" },
+                { "X-Client-Cert-Serial", "X-Client-Cert-Serial" },
+                { "x_jws_signature", "x_jws_signature" },
+                { "x_client_cert_serial", "x_client_cert_serial" },
+                { "x_request_id", "x_request_id" },
+                { "x_installation_id", "x_installation_id" },
+                { "x_device_id", "x_device_id" }
             };
 
     public static Dictionary<string, string> OptionalHeaders
